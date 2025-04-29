@@ -1,24 +1,20 @@
 import React from "react";
 import { useState } from 'react'
-import { Link } from "react-router-dom";
+import './IngredientDisplay.css'
 
 const IngredientDisplay = ({allIngredients, shoppingList}) => {
 
-    //const [ingredientsQuery, setingredientsQuery] = useState('');
-    const [ingredients, setIngredients] = useState(allIngredients);
+    // Set state variables
+    const [ingredientsToShow, setingredientsToShow] = useState(allIngredients);
     const [selectedIngredients, setSelectedIngredients] = useState([]);
     
-    console.log(` shopping`, shoppingList)
-    console.log(` alling`, allIngredients)
-
     const handleChange = (event) => {
 
-        event.preventDefault();
         const ingredientsQuery = new RegExp(`^${event.target.value}`, 'i'); 
 
-        const newIngredients = allIngredients.filter((ingredient) => (ingredientsQuery.test(ingredient)));
+        const newIngredients = allIngredients.filter((ingredient) => (ingredientsQuery.test(ingredient.name_of_ingredient)));
 
-        setIngredients(newIngredients)
+        setingredientsToShow(newIngredients)
 
     }
 
@@ -38,7 +34,7 @@ const IngredientDisplay = ({allIngredients, shoppingList}) => {
 
     const handleSubmit = () => { // Sends user to Create Review Page
 
-        console.log(ingredients);
+        console.log(ingredientsToShow);
         console.log(selectedIngredients);
         console.log(shoppingList);
 
@@ -56,12 +52,12 @@ const IngredientDisplay = ({allIngredients, shoppingList}) => {
                 <input id="ingSearchBar" type='text' placeholder="Rum, burbon, etc..." onChange={handleChange} /><br /><br />
             </form>
             <div className='ingrdientsContainer'>
-               {!allIngredients
+               {!ingredientsToShow
                     ? <></>
-                    : allIngredients.map((ingredient) => (
-                        <div className='ingredient-container' key={ingredient.id} onClick={handleClick(ingredient.id)}>
+                    : ingredientsToShow.map((ingredient) => (
+                        <div className='ingredient-container' key={ingredient.ingredient_id} onClick={() => handleClick(ingredient.ingredient_id)}>
                             {/*<img src={ingredient.background_image} style={{ maxWidth: '600px', maxHeight: '500px' }} />*/}
-                            <h2> {ingredient.name}</h2>
+                            <h2> {ingredient.name_of_ingredient}</h2>
                         </div>
                     ))
                 }
