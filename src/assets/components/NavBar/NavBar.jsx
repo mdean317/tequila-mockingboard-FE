@@ -8,7 +8,7 @@ const Navbar = (user) => {
     <nav id="top-navbar">
       <Link to="/">Home</Link>
       <Link to="/ingredients">Ingredients</Link>
-      <Link to="/shoppinglists/new">Your Shopping Lists</Link>
+      <Link to="/shoppinglists">Your Shopping Lists</Link>
       {user ? 
         <Link to="/log-out">Log Out</Link> 
         :
