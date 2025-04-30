@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 //import ContactUs from './components/ContactUs';
 //import Edit from './components/Edit';
 import ShoppingList from './assets/components/ShoppingList/ShoppingList';
-//import Home from './components/Home';
+import Home from './assets/components/Homepage/Homepage';
 //import HowWeStarted from './components/HowWeStarted';
 import Navbar from './assets/components/NavBar/NavBar';
 import IngredientDisplay from './assets/components/IngredientDisplay/IngredientDisplay';
@@ -58,7 +58,7 @@ const App = () => {
     <div className="app-container">
       <Navbar user={user} />
       <Routes>
-        {<Route path="/" element={<div/>} />}
+        {<Route path="/" element={<Home />} />}
         {<Route path="/ingredients" element=
               {<IngredientDisplay 
               allIngredients={allIngredients} 
