@@ -8,6 +8,9 @@ import { useEffect, useState } from 'react'
 import Navbar from './assets/components/NavBar/NavBar';
 import IngredientDisplay from './assets/components/IngredientDisplay/IngredientDisplay';
 //import New from './components/New';
+import IngredientList from './assets/components/Ingredient/IngredientList';
+import NewIngredient from './assets/components/Ingredient/NewIngredient';
+// import UpdateIngredient from './assets/components/Ingredient/UpdateIngredient';
 
 const App = () => {
 
@@ -39,8 +42,9 @@ const App = () => {
     }
 
     getAllIngredients();
-
-}, [])
+    console.log(allIngredients)
+}, 
+[])
 
 
   return (
@@ -54,8 +58,9 @@ const App = () => {
               shoppingList={shoppingList} 
               />}
         />}
-        {/*<Route path="/ingredients/new" element={<Ingredient />} />*/}
-        {/*<Route path="/ingredients/:id/edit" element={<Ingredient />} />*/}
+        <Route path="/ingredients/list" element={<IngredientList ingredients={allIngredients} setIngredients={setAllIngredients}/>} />
+        <Route path="/ingredients/new" element={<NewIngredient />} />
+        {/* <Route path="/ingredients/:id/edit" element={<UpdateIngredient ingredients={allIngredients} setIngredients={setAllIngredients} />} /> */}
         {/*<Route path="/shoppinglists" element={<ShoppingLists />} />*/}
         {/*<Route path="/shoppinglists/new" element={<ShoppingList />} />*/}
         {/*<Route path="/shoppinglists/:id/edit" element={<ShoppingList />} />*/}
