@@ -220,14 +220,16 @@ const Recipe = ({ allIngredients }) => {
                                         }}>
                                 {allIngredients.map((globalIngredient, index) => (  
                                         globalIngredient.ingredient_id === ingredient.ingredient 
-                                        ? <option key={index}value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient} selected</option>
+                                        ? <option key={index}value={globalIngredient.ingredient_id} selected> {globalIngredient.name_of_ingredient} </option>
                                         : <option key={index}value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
                                 ))}
-                                </select>
+                                </select> 
                                 <label htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
                                 <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity} onChange={handleChange} disabled></input>
+                                <button className='actionBtn' onClick={navToShow}>Remove </button>
                             </div>
                         ))}
+                        <button className='actionBtn' onClick={navToShow}>Add </button>
                     </div>
                     <label htmlFor="instructions">Instructions:</label>
                     <textarea id="instructions" name="instructions"
@@ -236,38 +238,6 @@ const Recipe = ({ allIngredients }) => {
                         style={{ padding: '10px', fontSize: '14px' }}
                         onChange={handleChange}>
                     </textarea>
-                    <select name='ingredients' multiple value={recipeData.ingredients}
-                        onChange={(event) => {
-                            const selected = Array.from(event.target.selectedOptions, option => option.value);
-                            setRecipeData({ ...recipeData, ingredients: selected })
-                        }}>
-                        {allIngredients.map((ingredient) => (
-                            <option key={ingredient.ingredient_id} name={ingredient.name_of_ingredient} value={ingredient.ingredient_id}>
-                                {ingredient.name_of_ingredient}
-                            </option>
-                        ))}
-                    </select>
-                    
-                    <h3>Ingredients</h3>
-                    <div>
-                        {recipeData.ingredients.map((ingredient, index) => ( 
-                        <div key={index}>
-                        <label htmlFor={`ingredient ${index}`} ></label>
-                        <select name={`ingredient ${index}`} value={ingredient}
-                        onChange={(event, index) => {
-                                        let tempRecipeIngredients = [...recipeIngredients];
-                                        tempRecipeIngredients[index] = { ...tempRecipeIngredients[index], ingredient: event.target.value };
-                                        setRecipeIngredients(tempRecipeIngredients);
-                                        }}>
-                      
-                        </select>
-                        <label htmlFor={`ingredient ${index} quantity`}>Quantity</label>
-                        <input type="number" name={`ingredient ${index} quantity`} onChange={handleChange}></input>
-                        </div>
-                        ))}
-                        
-                    </div>
-                        
                         <div className="buttonContainer">
                             <button className='actionBtn' onClick={navToShow}>Back </button>
                             <button className='actionBtn'>Submit </button>
