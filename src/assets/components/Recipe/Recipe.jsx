@@ -19,95 +19,66 @@ const Recipe = ({ allIngredients }) => {
         event.preventDefault()
 
         setRecipeData({ ...recipeData, [event.target.name]: event.target.value })
+
     };
 
     const handleSubmit = async (event) => {
 
         event.preventDefault()
-        const formData = new FormData(event.target);
-        const selectedIngredients = formData.getAll('ingredients').map(Number);
-        console.log(selectedIngredients)
-        const recipeToSend = recipeData
-        recipeToSend.ingredients = selectedIngredients
-        const response1 = await fetch(`http://18.234.134.4:8000/api/recipeingredient`)
+        console.log('recipeData')
+        console.log(recipeData)
+        console.log('recipeIngredients')
+        console.log(recipeIngredients)
 
-        let allIngsAndRecipes = await response1.json()
-
-        //const recipesDBIngredients = allIngsAndRecipes.filter((conenction) => conenction.recipe === recipeData.recipe_id);
-
+        // Update Recipe (instructions)
+        const response = await fetch(`http://18.234.134.4:8000/api/recipeingredient`)
+        const allIngsAndRecipes = await response.json()
         console.log(allIngsAndRecipes)
 
-        //let counter = 0; 
-        /*
-        // For every receipe/ingredient conenction in the DB
-        for (const ingredient of recipesDBIngredients) {
+        await fetch(`http://18.234.134.4:8000/api/recipe/${recipeData.recipe_id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(recipeData)
+        });
 
-            const indexOfIngredientInNewRecipe = recipeToSend.indexOf(ingredient.ingredient)
-            if (indexOfIngredientInNewRecipe === -1) {
+        // recipeData: {recipe_id, ingredients(3) [2, 3, 4]
+        // recipeIngredients:  {associationID: 3, ingredient: 3, name: 'Orange Juice', quantity: 2}
+        // Check if there are ingredients to be deleted 
+        // For each ingredient in the form...   
+        try {
+            for (const ingredient of recipeIngredients) {
+                
+                const ingDBObject = {recipe: recipeData.recipe_id, ingredient : ingredient.ingredient, quantity: ingredient.quantity}
+                // Check if it has to be created (-1)
+                if (ingredient.associationID == -1 ) {
 
-                console.log('To Delete:')
-                console.log(ingredient.ingredient)
-                console.log(recipeData.recipe_id)
-                const response = await fetch(`http://18.234.134.4:8000/api/recipe/${recipeData.recipe_id}`, {
-                    method: 'DELETE'
-                });
+                        await fetch(`http://18.234.134.4:8000/api/recipeingredient`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(ingDBObject)
+                        });
 
-                console.log(response)
+                    } else {
 
-            }
-                // And for every ingredient in the recipe we're working on... 
-                for (const recipeIngredient of recipeData.ingredients) {
-
-                    console.log(recipeIngredient)
-                    // Make sure 
-                    if ((recipeIngredient.recipe === recipeData.recipe_id) && ((recipeData.ingredients.indexOf("bison")))) {
-                        console.log(recipeIngredient)
+                        await fetch(`http://18.234.134.4:8000/api/recipeingredient/${ingredient.associationID}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(ingDBObject)
+                        });
                     }
-
-                if (originalIngrdient === selectedIngredients[counter]) {
-
-                    const response = await fetch(`http://18.234.134.4:8000/api/recipe/${recipeData.recipe_id}`, {
-                        method: 'DELETE'
-                    });
-
-                    console.log(response)
-
-                }
-
-                const response = await fetch(`http://18.234.134.4:8000/api/ingredient/${ingredient}`)
-
-                const ingredientData = await response.json()
-
-                for (const association of allIngsAndRecipes) {
-
-                    if ((association.recipe === recipe.recipe_id) && (association.ingredient === ingredient)) {}
-
-                        ingredientArray[counter] = { id: ingredientData.ingredient_id, name: ingredientData.name_of_ingredient, quantity : association.quantity}
-                        counter = counter + 1;
-                }
-
-                }
-        
             }
+        } catch (error) {
 
-            const response = await fetch(`http://18.234.134.4:8000/api/recipe/${recipeData.recipe_id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(recipeToSend)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-
-            console.log('Success:', result);
-
-    */
-        setPageActivity('show')
+            console.log(error)
+        }
+       
+        navToShow(event)
     }
 
     const deleteRecipe = async (event) => {
@@ -161,6 +132,27 @@ const Recipe = ({ allIngredients }) => {
         });
     }
 
+    const removeIngredient = async (event, ingIndex) => {
+
+        event.preventDefault();
+
+        const response = await fetch(`http://18.234.134.4:8000/api/recipeingredient/${recipeIngredients[ingIndex].associationID}`, {
+            method: 'DELETE'
+        });
+            
+        console.log(response)
+
+        const updated = recipeIngredients.filter((_, index) => index !== ingIndex);
+        setRecipeIngredients(updated);
+    };
+
+    const addIngredient = (event) => {
+
+        event.preventDefault();
+        setRecipeIngredients(prev => [...prev, {associationID: -1,  ingredient : allIngredients[0].ingredient_id, name : allIngredients[0].name_of_ingredient, quantity : 0}]);
+
+    }
+    
     const getIngredientsForRecipe  = async (recipeID) => {
 
         console.log(recipeID)
@@ -213,23 +205,28 @@ const Recipe = ({ allIngredients }) => {
                             <div key={index}>
                                 <label htmlFor={`ingredient ${index}`} >Ingredient: </label>
                                 <select name={`ingredient ${index}`} value={ingredient.ingredient}
-                                onChange={(event, index) => {
+                                onChange={(event) => {
                                         let tempRecipeIngredients = [...recipeIngredients];
                                         tempRecipeIngredients[index] = { ...tempRecipeIngredients[index], ingredient: event.target.value };
                                         setRecipeIngredients(tempRecipeIngredients);
                                         }}>
                                 {allIngredients.map((globalIngredient, index) => (  
                                         globalIngredient.ingredient_id === ingredient.ingredient 
-                                        ? <option key={index}value={globalIngredient.ingredient_id} selected> {globalIngredient.name_of_ingredient} </option>
+                                        ? <option key={index}value={globalIngredient.ingredient_id} > {globalIngredient.name_of_ingredient} </option>
                                         : <option key={index}value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
                                 ))}
                                 </select> 
                                 <label htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
-                                <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity} onChange={handleChange} disabled></input>
-                                <button className='actionBtn' onClick={navToShow}>Remove </button>
+                                <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity} 
+                                    onChange={(event) => {
+                                        const tempIngredients = [...recipeIngredients];
+                                        tempIngredients[index].quantity = parseInt(event.target.value, 10);
+                                        setRecipeIngredients(tempIngredients);
+                                      }} ></input>
+                                <button className='actionBtn' onClick={(event) => removeIngredient(event, index)}>Remove </button>
                             </div>
                         ))}
-                        <button className='actionBtn' onClick={navToShow}>Add </button>
+                        <button className='actionBtn' onClick={addIngredient}>Add </button>
                     </div>
                     <label htmlFor="instructions">Instructions:</label>
                     <textarea id="instructions" name="instructions"
