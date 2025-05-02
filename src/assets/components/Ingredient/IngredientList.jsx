@@ -129,14 +129,14 @@ const IngredientList = ({ ingredients, setIngredients }) => {
 
     return (
         <div>
-            <h1>Your Ingredients List</h1>
+            <h1 className="font-bold text-5xl m-8" >Your Ingredients List</h1>
             <ul>
                 {ingredients.map((ingredient) => (
                     <><li key={ingredient.ingredient_id}>
                         <h2>{ingredient.name_of_ingredient}</h2>
                     </li>
-                        <button onClick={(() => (setUpdateIngredientList(true), setUpdateIngredient(ingredient)))} >Update {ingredient.name_of_ingredient}</button>
-                        <button onClick={() => handleDelete(ingredient.ingredient_id)}>Delete {ingredient.name_of_ingredient}</button></>
+                        <button className=" hover:bg-red-700 cursor-pointer text-white bg-black border-solid border-black rounded border-2 px-1 m-4" onClick={(() => (setUpdateIngredientList(true), setUpdateIngredient(ingredient)))} >Update {ingredient.name_of_ingredient}</button>
+                        <button className="cursor-pointer text-white bg-black border-solid border-black rounded border-2 px-1 m-4" onClick={() => handleDelete(ingredient.ingredient_id)}>Delete {ingredient.name_of_ingredient}</button></>
                 ))}
             </ul>
             {updateIngredientList == true ?

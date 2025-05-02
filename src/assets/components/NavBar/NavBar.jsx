@@ -10,7 +10,7 @@ const Navbar = ({ user }) => {
         <>
           <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/signin">Sign In</Link>
           <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/signup">Sign Up</Link>
-          <Link to="/user" >Profile</Link>
+          
         </>
       ) : (
         <>
@@ -18,6 +18,7 @@ const Navbar = ({ user }) => {
           <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/shoppinglists">Your Shopping Lists</Link>
           <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/recipes">Recipes</Link>
           <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/logout">Log Out</Link>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/user" >Profile</Link>
         </>
       )}
     </nav>
