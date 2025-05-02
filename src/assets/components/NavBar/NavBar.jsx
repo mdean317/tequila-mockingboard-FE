@@ -1,37 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import './NavBar.css'
 
 const Navbar = ({ user }) => {
   return (
-    <nav id="top-navbar">
-<div className="linkContainer">
-      <Link className="navLink" to="/">Home</Link>
-      
-      </div>
+    <nav className="flex justify-around p-4" id="top-navbar"> {/* */}
+
+      <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/">Home</Link>
       {user === true ? (
         <>
-        <div className="linkContainer">
-          <Link to="/signin">Sign In</Link>
-          </div>
-          <div className="linkContainer">
-          <Link to="/signup">Sign Up</Link>
-          </div>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/signin">Sign In</Link>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/signup">Sign Up</Link>
         </>
       ) : (
         <>
-        <div className="linkContainer">
-            <Link to="/ingredients/list">Ingredients</Link>
-            </div>
-            <div className="linkContainer">
-         <Link to="/shoppinglists">Your Shopping Lists</Link>
-         </div>
-         <div className="linkContainer">
-      <Link className="navLink" to="/recipes">Recipes</Link>
-      </div>
-         <div className="linkContainer">
-          <Link to="/logout">Log Out</Link>
-          </div>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/ingredients/list">Ingredients</Link>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/shoppinglists">Your Shopping Lists</Link>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/recipes">Recipes</Link>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/logout">Log Out</Link>
         </>
       )}
     </nav>
