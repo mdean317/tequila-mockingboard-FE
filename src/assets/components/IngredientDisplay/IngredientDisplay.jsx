@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from 'react'
 import './IngredientDisplay.css'
 
-const IngredientDisplay = ({allIngredients, shoppingList}) => {
+const IngredientDisplay = ({allIngredients, userShoppingLists}) => {
 
     // Set state variables
     const [ingredientsToShow, setingredientsToShow] = useState(allIngredients);
@@ -36,7 +36,7 @@ const IngredientDisplay = ({allIngredients, shoppingList}) => {
 
         console.log(ingredientsToShow);
         console.log(selectedIngredients);
-        console.log(shoppingList);
+        console.log(userShoppingLists);
 
         // TO ADD: Run fetch command that adds to DB
 
@@ -62,7 +62,7 @@ const IngredientDisplay = ({allIngredients, shoppingList}) => {
                     ))
                 }
             </div>
-            <button onClick={handleSubmit}>Add to shopping List: {shoppingList.name} </button>
+            <button onClick={handleSubmit}>Add to shopping List: {userShoppingLists.name} </button>
         </div>
     )
 }

@@ -1,5 +1,5 @@
-import React from "react";
-import bagImage from "./images/bag.png";
+// import React from "react";
+// import bagImage from "./images/bag.png";
 
 const Home = () => {
   return (

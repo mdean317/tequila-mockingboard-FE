@@ -7,8 +7,11 @@ const Navbar = (user) => {
   return (
     <nav id="top-navbar">
       <Link to="/">Home</Link>
+
       <Link to="/ingredients/list">Ingredients</Link>
-      <Link to="/shoppinglists/new">Your Shopping Lists</Link>
+   
+      <Link to="/shoppinglists">Your Shopping Lists</Link>
+
       {user ? 
         <Link to="/log-out">Log Out</Link> 
         :
