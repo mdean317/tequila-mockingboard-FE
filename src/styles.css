@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+
+html, body {
+  margin: 0;
+  background-image: linear-gradient(gray, blue);
+  height: 100%;
+}
+
+#root {
+  /*max-width: 1280px;*/
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  background-color: aqua;
+}
+
+#main {
+  /*max-width: 1280px;*/
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  background-color: rgb(32, 227, 84);
+}
