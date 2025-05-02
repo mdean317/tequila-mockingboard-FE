@@ -9,7 +9,7 @@ import Navbar from './assets/components/NavBar/NavBar';
 import IngredientDisplay from './assets/components/IngredientDisplay/IngredientDisplay';
 //import New from './components/New';
 import IngredientList from './assets/components/Ingredient/IngredientList';
-import NewIngredient from './assets/components/Ingredient/NewIngredient';
+// import NewIngredient from './assets/components/Ingredient/NewIngredient';
 // import UpdateIngredient from './assets/components/Ingredient/UpdateIngredient';
 
 const App = () => {
@@ -59,7 +59,7 @@ const App = () => {
               />}
         />}
         <Route path="/ingredients/list" element={<IngredientList ingredients={allIngredients} setIngredients={setAllIngredients}/>} />
-        <Route path="/ingredients/new" element={<NewIngredient />} />
+        {/* <Route path="/ingredients/new" element={<NewIngredient />} /> */}
         {/* <Route path="/ingredients/:id/edit" element={<UpdateIngredient ingredients={allIngredients} setIngredients={setAllIngredients} />} /> */}
         {/*<Route path="/shoppinglists" element={<ShoppingLists />} />*/}
         {/*<Route path="/shoppinglists/new" element={<ShoppingList />} />*/}
