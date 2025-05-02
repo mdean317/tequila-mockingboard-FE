@@ -5,17 +5,19 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 
-const Recipe = ({allIngredients}) => {
+const Recipe = ({ allIngredients }) => {
 
     const [pageActivity, setPageActivity] = useState('show');
     const [recipeData, setRecipeData] = useState({ ingredients: [] })
+    const [recipeIngredients, setRecipeIngredients] = useState([])
 
     const navigate = useNavigate();
     const location = useLocation();
 
     const handleChange = (event) => {
+
         event.preventDefault()
-        
+
         setRecipeData({ ...recipeData, [event.target.name]: event.target.value })
     };
 
@@ -30,11 +32,11 @@ const Recipe = ({allIngredients}) => {
         const response1 = await fetch(`http://18.234.134.4:8000/api/recipeingredient`)
 
         let allIngsAndRecipes = await response1.json()
-        
+
         //const recipesDBIngredients = allIngsAndRecipes.filter((conenction) => conenction.recipe === recipeData.recipe_id);
 
         console.log(allIngsAndRecipes)
-       
+
         //let counter = 0; 
         /*
         // For every receipe/ingredient conenction in the DB
@@ -110,7 +112,7 @@ const Recipe = ({allIngredients}) => {
 
     const deleteRecipe = async (event) => {
         event.preventDefault()
-        
+
         try {
 
             const response = await fetch(`http://18.234.134.4:8000/api/recipe/${recipeData.recipe_id}`, {
@@ -137,35 +139,61 @@ const Recipe = ({allIngredients}) => {
     const navToEdit = (event) => {
 
         event.preventDefault()
-     
+
         navigate('/recipe', {
             state: {
                 recipe: recipeData,
                 activity: 'edit'
             }
-        }); 
+        });
 
     }
 
     const navToShow = (event) => {
 
         event.preventDefault()
-      
+
         navigate('/recipe', {
             state: {
                 recipe: recipeData,
                 activity: 'show'
             }
-        }); 
+        });
     }
 
-    useEffect(() => {
+    const getIngredientsForRecipe  = async (recipeID) => {
+
+        console.log(recipeID)
+        const response = await fetch(`http://18.234.134.4:8000/api/recipeingredient`)
+        let allIngsForRecipes = await response.json()
+        let ingsForCurrRecipe = [{}]
+        let counter = 0; 
+        for (const association of allIngsForRecipes) {
+
+            if (association.recipe === recipeID) {
+
+                const ingredient = allIngredients.filter((ingredient) => ingredient.ingredient_id === association.ingredient);
+                ingsForCurrRecipe[counter] = {associationID: association.id,  ingredient : association.ingredient, name : ingredient[0].name_of_ingredient, quantity : association.quantity}
+                counter = counter + 1; 
+
+            }
+            
+        }
+        return(ingsForCurrRecipe)
+
+    }
+
+    useEffect(() =>  {
 
         const initRecipe = async () => {
 
             const recipe = location.state?.recipe
-            setPageActivity(location.state?.activity || 'show')  
+            console.log(recipe)
+            const ingsForRecipe = await getIngredientsForRecipe(recipe.recipe_id);
+            setPageActivity(location.state?.activity || 'show')
             setRecipeData(recipe)
+            console.log(ingsForRecipe)
+            setRecipeIngredients (ingsForRecipe)
 
         }
 
@@ -179,44 +207,88 @@ const Recipe = ({allIngredients}) => {
             <img src={`/${recipeData.name}.jpg`}></img>
             {pageActivity === 'edit' ?
                 <form onSubmit={handleSubmit}>
+                    <h3>Ingredients:</h3>
+                    <div className="ingredientsContainer">
+                        {recipeIngredients.map((ingredient, index) => ( 
+                            <div key={index}>
+                                <label htmlFor={`ingredient ${index}`} >Ingredient: </label>
+                                <select name={`ingredient ${index}`} value={ingredient.ingredient}
+                                onChange={(event, index) => {
+                                        let tempRecipeIngredients = [...recipeIngredients];
+                                        tempRecipeIngredients[index] = { ...tempRecipeIngredients[index], ingredient: event.target.value };
+                                        setRecipeIngredients(tempRecipeIngredients);
+                                        }}>
+                                {allIngredients.map((globalIngredient, index) => (  
+                                        globalIngredient.ingredient_id === ingredient.ingredient 
+                                        ? <option key={index}value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient} selected</option>
+                                        : <option key={index}value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
+                                ))}
+                                </select>
+                                <label htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
+                                <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity} onChange={handleChange} disabled></input>
+                            </div>
+                        ))}
+                    </div>
                     <label htmlFor="instructions">Instructions:</label>
                     <textarea id="instructions" name="instructions"
-                        rows="10" cols="70" type="text" 
-                        value={recipeData.instructions}
+                        rows="10" cols="70"
+                        value={recipeData.instructions || ''}
                         style={{ padding: '10px', fontSize: '14px' }}
                         onChange={handleChange}>
                     </textarea>
                     <select name='ingredients' multiple value={recipeData.ingredients}
-                    onChange={(event) => {
-                                    const selected = Array.from(event.target.selectedOptions, option => option.value);
-                                    setRecipeData({...recipeData, ingredients: selected})
-                                    }}>
-                    {allIngredients.map((ingredient) => (
-                        <option key={ingredient.ingredient_id} name={ingredient.name_of_ingredient} value={ingredient.ingredient_id}>
-                            {ingredient.name_of_ingredient}
-                        </option>
-                    ))}
-                </select>
-                    <div className="buttonContainer">
-                        <button className='actionBtn' onClick={navToShow}>Back </button>
-                        <button className='actionBtn'>Submit </button>
+                        onChange={(event) => {
+                            const selected = Array.from(event.target.selectedOptions, option => option.value);
+                            setRecipeData({ ...recipeData, ingredients: selected })
+                        }}>
+                        {allIngredients.map((ingredient) => (
+                            <option key={ingredient.ingredient_id} name={ingredient.name_of_ingredient} value={ingredient.ingredient_id}>
+                                {ingredient.name_of_ingredient}
+                            </option>
+                        ))}
+                    </select>
+                    
+                    <h3>Ingredients</h3>
+                    <div>
+                        {recipeData.ingredients.map((ingredient, index) => ( 
+                        <div key={index}>
+                        <label htmlFor={`ingredient ${index}`} ></label>
+                        <select name={`ingredient ${index}`} value={ingredient}
+                        onChange={(event, index) => {
+                                        let tempRecipeIngredients = [...recipeIngredients];
+                                        tempRecipeIngredients[index] = { ...tempRecipeIngredients[index], ingredient: event.target.value };
+                                        setRecipeIngredients(tempRecipeIngredients);
+                                        }}>
+                      
+                        </select>
+                        <label htmlFor={`ingredient ${index} quantity`}>Quantity</label>
+                        <input type="number" name={`ingredient ${index} quantity`} onChange={handleChange}></input>
+                        </div>
+                        ))}
+                        
                     </div>
+                        
+                        <div className="buttonContainer">
+                            <button className='actionBtn' onClick={navToShow}>Back </button>
+                            <button className='actionBtn'>Submit </button>
+                        </div>                 
                 </form>
                 : <form>
-                    <label htmlFor="Ingredients">Ingredients:</label>
+                    <h3>Ingredients:</h3>
                     <div className="ingredientsContainer">
-                    <select name='ingredients' multiple value={recipeData.ingredients}> 
-                    {allIngredients.map((ingredient) => (
-                        <option key={ingredient.ingredient_id} name={ingredient.name_of_ingredient} value={ingredient.ingredient_id}>
-                            {ingredient.name_of_ingredient}
-                        </option>
-                    ))}
-                </select>
-                </div>
-                    <label htmlFor="Instructions">Instructions:</label>
-                    <textarea id="Instructions" name="Instructions"
-                        rows="10" cols="70" type="text"
-                        value={recipeData.instructions}
+                        {recipeIngredients.map((ingredient, index) => ( 
+                        <div key={index}>
+                        <label htmlFor={`ingredient ${index}`} >Ingredient: </label>
+                        <input type="text" name={`ingredient ${index}`} value={ingredient.name} onChange={handleChange} disabled/>
+                        <label htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
+                        <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity} onChange={handleChange} disabled></input>
+                        </div>
+                        ))}
+                    </div>
+                    <label htmlFor="instructions">Instructions:</label>
+                    <textarea id="instructions" name="instructions"
+                        rows="10" cols="70" 
+                        value={recipeData.instructions || ''}
                         style={{ padding: '10px', fontSize: '14px' }}
                         disabled>
                     </textarea>
