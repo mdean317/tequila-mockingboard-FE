@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react'
 //import GroceryList from './components/GroceryList';
 //import Home from './components/Home';
 //import HowWeStarted from './components/HowWeStarted';
+import Recipes from './assets/components/Recipes/Recipes';
+import Recipe from './assets/components/Recipe/Recipe';
+import NewRecipe from './assets/components/NewRecipe/NewRecipe';
 import Navbar from './assets/components/NavBar/NavBar';
 import IngredientDisplay from './assets/components/IngredientDisplay/IngredientDisplay';
 //import New from './components/New';
@@ -52,8 +55,10 @@ const App = () => {
               {<IngredientDisplay 
               allIngredients={allIngredients} 
               shoppingList={shoppingList} 
-              />}
-        />}
+              />} />}
+        {<Route path="/recipes" element={<Recipes allIngredients={allIngredients}  />}/>}
+        {<Route path="/recipe" element={<Recipe allIngredients={allIngredients} />} />}
+        {<Route path="/recipe/new" element={<NewRecipe allIngredients={allIngredients} />} />}
         {/*<Route path="/ingredients/new" element={<Ingredient />} />*/}
         {/*<Route path="/ingredients/:id/edit" element={<Ingredient />} />*/}
         {/*<Route path="/shoppinglists" element={<ShoppingLists />} />*/}

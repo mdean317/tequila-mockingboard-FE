@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from 'react'
-import './IngredientDisplay.css'
+//import './IngredientDisplay.css'
 
 const IngredientDisplay = ({allIngredients, shoppingList}) => {
 
