@@ -1,6 +1,5 @@
 import React from "react";
 import { useEffect, useState } from 'react'
-import './Recipes.css'
 import { useNavigate } from 'react-router-dom';
 
 const Recipes = () => {
