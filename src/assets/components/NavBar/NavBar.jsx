@@ -16,6 +16,7 @@ const Navbar = ({ user }) => {
           </div>
           <div className="linkContainer">
           <Link to="/signup">Sign Up</Link>
+          <Link to="/user" >Profile</Link>
           </div>
         </>
       ) : (
