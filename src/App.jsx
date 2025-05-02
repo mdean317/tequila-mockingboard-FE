@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
+import Recipes from './assets/components/Recipes/Recipes';
+import Recipe from './assets/components/Recipe/Recipe';
+import NewRecipe from './assets/components/NewRecipe/NewRecipe';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from './assets/components/NavBar/NavBar';
 import IngredientDisplay from './assets/components/IngredientDisplay/IngredientDisplay';
@@ -88,6 +91,9 @@ const App = () => {
         <Route path="/shoppinglists" element={<ShoppingList allIngredients={allIngredients} setAllIngredients={setAllIngredients} userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />
         <Route path="/shoppinglists/new" element={<ShoppingList userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />
         <Route path="/shoppinglists/:id/edit" element={<ShoppingList userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />
+        {<Route path="/recipes" element={<Recipes allIngredients={allIngredients}  />}/>}
+        {<Route path="/recipe" element={<Recipe allIngredients={allIngredients} />} />}
+        {<Route path="/recipe/new" element={<NewRecipe allIngredients={allIngredients} />} />}
       </Routes>
     </div>
   );
