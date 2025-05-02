@@ -1,6 +1,5 @@
 import React from "react";
 import { useEffect, useState } from 'react'
-import './Recipe.css'
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
