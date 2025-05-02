@@ -81,7 +81,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
             <h2>Your Shopping Lists:</h2>
             {userShoppingLists.map((shoppinglist) => (
                 <div key={shoppinglist.shopping_id}>
-                    <h3>{shoppinglist.name}</h3>
+                    <h3>{shoppinglist.name}{shoppinglist.shopping_id}</h3>
                     <p>{shoppinglist.ingredients_list}</p>
                     {/* Update Shopping List */}
                     <button onClick={(() => (setCreateListView(false), setUpdateListView(true), setUpdateShoppingList(shoppinglist), console.log(shoppinglist)))}>Update Shopping List</button>

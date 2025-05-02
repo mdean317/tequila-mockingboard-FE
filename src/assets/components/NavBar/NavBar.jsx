@@ -1,22 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import './NavBar.css'
 
-const Navbar = (user) => {
-
+const Navbar = ({ user }) => {
   return (
-    <nav id="top-navbar">
-      <Link to="/">Home</Link>
+    <nav className="flex justify-around p-4" id="top-navbar"> {/* */}
 
-      <Link to="/ingredients/list">Ingredients</Link>
-   
-      <Link to="/shoppinglists">Your Shopping Lists</Link>
-
-      {user ? 
-        <Link to="/log-out">Log Out</Link> 
-        :
-        <Link to="/log in">Sign Up / Log In</Link>
-      }
+      <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/">Home</Link>
+      {user === true ? (
+        <>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/signin">Sign In</Link>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/signup">Sign Up</Link>
+        </>
+      ) : (
+        <>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/ingredients/list">Ingredients</Link>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/shoppinglists">Your Shopping Lists</Link>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/recipes">Recipes</Link>
+          <Link className="text-blue-700 font-bold p-2 bg-green-700 rounded-xl" to="/logout">Log Out</Link>
+        </>
+      )}
     </nav>
   );
 };
