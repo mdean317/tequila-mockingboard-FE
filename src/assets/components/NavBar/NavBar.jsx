@@ -7,8 +7,10 @@ const Navbar = (user) => {
   return (
     <nav id="top-navbar">
       <Link to="/">Home</Link>
+      
+      {/* <Link to="/ingredients" >Ingredients</Link> */}
 
-      <Link to="/ingredients/list">Ingredients</Link>
+      <Link to="/ingredients/list">Your Ingredients List</Link>
    
       <Link to="/shoppinglists">Your Shopping Lists</Link>
 

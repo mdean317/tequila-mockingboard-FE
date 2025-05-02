@@ -129,7 +129,7 @@ const IngredientList = ({ ingredients, setIngredients }) => {
 
     return (
         <div>
-            <h1>Ingredients</h1>
+            <h1>Your Ingredients List</h1>
             <ul>
                 {ingredients.map((ingredient) => (
                     <><li key={ingredient.ingredient_id}>

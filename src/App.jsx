@@ -63,12 +63,12 @@ const App = () => {
       <Navbar user={user} />
       <Routes>
         {<Route path="/" element={<Home />} />}
-        {<Route path="/ingredients" element=
+        {/* {<Route path="/ingredients" element=
               {<IngredientDisplay 
               allIngredients={allIngredients} 
               userShoppingLists={userShoppingLists} 
               />}
-        />}
+        />} */}
 
         <Route path="/ingredients/list" element={<IngredientList ingredients={allIngredients} setIngredients={setAllIngredients}/>} />
         {/* <Route path="/ingredients/new" element={<NewIngredient />} /> */}
