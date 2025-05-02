@@ -28,6 +28,20 @@ const IngredientDisplay = ({ userShoppingLists }) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch ingredients: ${response.status}`);
         }
+        
+// const IngredientDisplay = ({allIngredients, userShoppingLists}) => {
+
+//     // Set state variables
+//     const [ingredientsToShow, setingredientsToShow] = useState(allIngredients);
+//     const [selectedIngredients, setSelectedIngredients] = useState([]);
+    
+//     const handleChange = (event) => {
+
+//         const ingredientsQuery = new RegExp(`^${event.target.value}`, 'i'); 
+
+//         const newIngredients = allIngredients.filter((ingredient) => (ingredientsQuery.test(ingredient.name_of_ingredient)));
+
+//         setingredientsToShow(newIngredients)
 
         const data = await response.json();
         setIngredients(data);
@@ -65,6 +79,7 @@ const IngredientDisplay = ({ userShoppingLists }) => {
       setError('Please select ingredients to add.');
       return;
     }
+    
     if (!userShoppingLists || userShoppingLists.length === 0)
     {
         setError("You don't have any shopping lists")
