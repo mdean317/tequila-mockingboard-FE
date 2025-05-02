@@ -103,7 +103,7 @@ const IngredientList = ({ ingredients, setIngredients }) => {
     const handleDelete = async (ingredientId) => {
         console.log(ingredientId)
             try {
-                const response = await fetch(`http://18.234.134.4:8000/api/ingredient`, {
+                const response = await fetch(`http://18.234.134.4:8000/api/ingredient/${ingredientId}`, {
                     method: "DELETE",
                 });
     
