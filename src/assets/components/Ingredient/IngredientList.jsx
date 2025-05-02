@@ -11,7 +11,7 @@ const IngredientList = ({ ingredients, setIngredients }) => {
         recommended_drink: "",
         alt_ingredient: "",
         is_bought: false,
-    }); 
+    });
     const [updateIngredientList, setUpdateIngredientList] = useState(false)
     const [addIngredient, setAddIngredient] = useState({
         name_of_ingredient: "",
@@ -63,6 +63,7 @@ const IngredientList = ({ ingredients, setIngredients }) => {
 
             if (response.ok) {
                 alert("Ingredient updated successfully!");
+                setUpdateIngredientList(false);  // hides update form after submit
             } else {
                 alert("Failed to update ingredient.");
             }
@@ -84,6 +85,7 @@ const IngredientList = ({ ingredients, setIngredients }) => {
 
             if (response.ok) {
                 alert("Ingredient added successfully!");
+                setAddIngredientForm(false);  //  Hides add ingredient form after submit
                 setAddIngredient({
                     name_of_ingredient: "",
                     type: "",
@@ -92,6 +94,10 @@ const IngredientList = ({ ingredients, setIngredients }) => {
                     alt_ingredient: "",
                     is_bought: false,
                 });
+                //  Add the new ingredient to the ingredient list 
+                const updatedResponse = await fetch('http://18.234.134.4:8000/api/ingredient');
+                const updatedData = await updatedResponse.json();
+                setIngredients(updatedData);
             } else {
                 alert("Failed to add ingredient.");
             }
@@ -101,25 +107,23 @@ const IngredientList = ({ ingredients, setIngredients }) => {
     };
 
     const handleDelete = async (ingredientId) => {
-        console.log(ingredientId)
-            try {
-                const response = await fetch(`http://18.234.134.4:8000/api/ingredient/${ingredientId}`, {
-                    method: "DELETE",
-                });
-    
-                if (response.ok) {
-                    alert("Ingredient deleted successfully!");
-                    // Remove the deleted ingredient from the local state
-                    setIngredients(prevIngredients => prevIngredients.filter(ingredient => ingredient.ingredient_id !== ingredientId));
-                } else {
-                    alert("Failed to delete ingredient.");
-                }
-            } catch (error) {
-                console.error("Error deleting ingredient:", error);
+        try {
+            const response = await fetch(`http://18.234.134.4:8000/api/ingredient/${ingredientId}`, {
+                method: "DELETE",
+            });
+
+            if (response.ok) {
+                alert("Ingredient deleted successfully!");
+                // Remove the deleted ingredient from the ingredient list
+                setIngredients(prevIngredients => prevIngredients.filter(ingredient => ingredient.ingredient_id !== ingredientId));
+            } else {
+                alert("Failed to delete ingredient.");
             }
-        
+        } catch (error) {
+            console.error("Error deleting ingredient:", error);
+        }
+
     };
-    
 
     if (error) return <div>Error loading ingredients: {error} </div>;
 
@@ -190,57 +194,57 @@ const IngredientList = ({ ingredients, setIngredients }) => {
             }
             <button onClick={(() => (setAddIngredientForm(true)))} >Add Ingredient</button>
 
-{addIngredientForm == true ?
+            {addIngredientForm == true ?
                 <form onSubmit={handleAddSubmit}>
-                <input
-                  type="text"
-                  name="name_of_ingredient"
-                  placeholder="Ingredient Name"
-                  value={addIngredient.name_of_ingredient}
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="type"
-                  placeholder="Type"
-                  value={addIngredient.type}
-                  onChange={handleChange}
-                />
-                <input
-                  type="number"
-                  name="quantity"
-                  placeholder="Quantity"
-                  value={addIngredient.quantity}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="recommended_drink"
-                  placeholder="Recommended Drink"
-                  value={addIngredient.recommended_drink}
-                  onChange={handleChange}
-                />
-                <input
-                  type="number"
-                  name="alt_ingredient"
-                  placeholder="Alternative Ingredient ID"
-                  value={addIngredient.alt_ingredient}
-                  onChange={handleChange}
-                />
-                <label>
-                  Bought:
-                  <input
-                    type="checkbox"
-                    name="is_bought"
-                    checked={addIngredient.is_bought}
-                    onChange={(event) =>
-                      setAddIngredient({ ...addIngredient, is_bought: event.target.checked })
-                    }
-                  />
-                </label>
-                <button type="submit">Add Ingredient</button>
-              </form>
+                    <input
+                        type="text"
+                        name="name_of_ingredient"
+                        placeholder="Ingredient Name"
+                        value={addIngredient.name_of_ingredient}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="type"
+                        placeholder="Type"
+                        value={addIngredient.type}
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="number"
+                        name="quantity"
+                        placeholder="Quantity"
+                        value={addIngredient.quantity}
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="text"
+                        name="recommended_drink"
+                        placeholder="Recommended Drink"
+                        value={addIngredient.recommended_drink}
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="number"
+                        name="alt_ingredient"
+                        placeholder="Alternative Ingredient ID"
+                        value={addIngredient.alt_ingredient}
+                        onChange={handleChange}
+                    />
+                    <label>
+                        Bought:
+                        <input
+                            type="checkbox"
+                            name="is_bought"
+                            checked={addIngredient.is_bought}
+                            onChange={(event) =>
+                                setAddIngredient({ ...addIngredient, is_bought: event.target.checked })
+                            }
+                        />
+                    </label>
+                    <button type="submit">Add Ingredient</button>
+                </form>
                 : <></>
             }
         </div>
