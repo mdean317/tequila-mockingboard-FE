@@ -1,11 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setAllIngredients}) => {
+
+    const [shoppingListIngredients, setShoppingListIngredients] = useState({
+        ingredient: []
+    })
 
     const [newShoppingList, setNewShoppingList] = useState({
         name: '',
         ingredients_list: [],
     })
+
     const [updateShoppingList, setUpdateShoppingList] = useState({
         shopping_id: null,
         name: '',
@@ -15,6 +20,15 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
     const [createListView, setCreateListView] = useState(false)
     const [updateListView, setUpdateListView] = useState(false)
     
+    useEffect(() => {
+        const getAllShoppingListIngredients = async () => {
+            const res = await fetch(`http://18.234.134.4:8000/api/shoppinglistingredient`)
+            const JSONdataShoppingListIngredients = await res.json()
+            console.log(JSONdataShoppingListIngredients)
+            setShoppingListIngredients(JSONdataShoppingListIngredients || []);
+        }
+        getAllShoppingListIngredients()
+    }, []);
 
     const handleChange = (event) => {
         event.preventDefault()
@@ -74,28 +88,33 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
         <>
             {updateListView == false && createListView == false ?
             <>
-            <h1>Shopping List Page</h1>
+            <h1 className='text-8xl p-2 m-2'>Shopping List Page</h1>
             
-            <button onClick={(() => (setCreateListView(true), setUpdateListView(false)))}>Create New Shopping List</button>
+            <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' onClick={(() => (setCreateListView(true), setUpdateListView(false)))}>Create New Shopping List</button>
 
-            <h2>Your Shopping Lists:</h2>
+            <h2 className='text-6xl p-2 m-2'>Your Shopping Lists:</h2>
             {userShoppingLists.map((shoppinglist) => (
                 <div key={shoppinglist.shopping_id}>
-                    <h3>{shoppinglist.name}{shoppinglist.shopping_id}</h3>
-                    <p>{shoppinglist.ingredients_list}</p>
+                    <h3 className='text-4xl p-2 m-2'>{shoppinglist.name} {shoppinglist.shopping_id}</h3>
+                    {shoppingListIngredients.filter((listIngredient) => listIngredient.shopping_list === shoppinglist.shopping_id).map((listIngredient) => (
+                        allIngredients.filter((ingredient) => ingredient.ingredient_id === listIngredient.ingredient).map((ingredient) => (
+                            <p key={ingredient.ingredient_id}>{ingredient.name_of_ingredient} Quantity: {listIngredient.quantity}</p>
+                        ))
+                        
+                    ))}
+                    <p className='text-2xl p-2 m-2'>{}</p>
                     {/* Update Shopping List */}
-                    <button onClick={(() => (setCreateListView(false), setUpdateListView(true), setUpdateShoppingList(shoppinglist), console.log(shoppinglist)))}>Update Shopping List</button>
+                    <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' onClick={(() => (setCreateListView(false), setUpdateListView(true), setUpdateShoppingList(shoppinglist), console.log(shoppinglist)))}>Update Shopping List</button>
                     {/* Delte Shopping List */}
-                    <button onClick={(() => handleDeleteList(shoppinglist))}>Delete {shoppinglist.name}</button>
+                    <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(() => handleDeleteList(shoppinglist))}>Delete {shoppinglist.name}</button>
                 </div>
             ))}
             </>
             :<></>
             }
-
             {createListView == true ?
             <>
-            <h2>Create New Shopping List:</h2>
+            <h2 className='text-6xl p-2 m-2'>Create New Shopping List:</h2>
             <form>
                 <label name='name'>Update Name: </label>
                 <input name='name' value={newShoppingList.name} onChange={handleChange}></input>
@@ -118,7 +137,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
 
             {updateListView == true ?
             <>
-            <h2>Update Shopping List:</h2>
+            <h2 className='text-6xl'>Update Shopping List:</h2>
             <form>
                 <label name='name'>Name: </label>
                 <input name='name' value={updateShoppingList.name} onChange={handleChange}></input>
