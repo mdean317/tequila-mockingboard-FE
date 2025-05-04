@@ -10,6 +10,7 @@ import SignIn from './assets/components/auth/SignIn';
 import SignUp from './assets/components/auth/SignUp';
 import Home from './assets/components/Homepage/Homepage';
 import IngredientList from './assets/components/Ingredient/IngredientList';
+import UserProfile from './assets/components/User/UserProfile';
 
 const App = () => {
   const [user, setUser] = useState(localStorage.getItem('authToken') ? 'loggedIn' : '');

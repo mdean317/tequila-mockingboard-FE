@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 const SignUp = ({ onAuthSuccess }) => {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -21,12 +21,12 @@ const SignUp = ({ onAuthSuccess }) => {
       return;
     }
 
-    fetch('http://18.234.134.4:8000/api/auth/login/', {
+    fetch('http://18.234.134.4:8000/api/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username: username, email: email, password: password }),
+      body: JSON.stringify({ name: name, email: email, password: password }),
     })
       .then((response) => {
         setLoading(false);
@@ -36,7 +36,7 @@ const SignUp = ({ onAuthSuccess }) => {
           return response.json().then((data) => {
             // Adjust error handling based on your backend's registration response
             let errorMessage = 'Sign-up failed.';
-            if (data.username) errorMessage += ` Username: ${data.username.join(', ')}`;
+            if (data.name) errorMessage += ` Name: ${data.name.join(', ')}`;
             if (data.email) errorMessage += ` Email: ${data.email.join(', ')}`;
             if (data.password) errorMessage += ` Password: ${data.password.join(', ')}`;
             if (data.non_field_errors) errorMessage += ` General: ${data.non_field_errors.join(', ')}`;
@@ -69,12 +69,12 @@ const SignUp = ({ onAuthSuccess }) => {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="username">Username:</label>
+          <label htmlFor="name">Username:</label>
           <input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
