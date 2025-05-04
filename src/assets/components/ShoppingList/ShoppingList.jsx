@@ -40,27 +40,70 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
 
     const handleCreateNewList = async (event) => {
         event.preventDefault()
-        console.log(newShoppingList)
+
+        let getNewShoppingList = userShoppingLists
+        let ingIDArray = []
+        for (const ingredient of shoppingListIngredients) {
+            ingIDArray.push(ingredient.ingredient)
+        }
+
+        getNewShoppingList.ingredient = ingIDArray
+        getNewShoppingList.user = 1
+        console.log(getNewShoppingList)
+
         const response = await fetch(`http://18.234.134.4:8000/api/shoppinglist`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                name: newShoppingList.name,
-                user: 1, // THIS WILL NEED TO BECOME THE USER STATE FOR THE USER'S ID
-                ingredients_list: newShoppingList.ingredients_list
+                getNewShoppingList
+                // name: newShoppingList.name,
+                // user: 1, // THIS WILL NEED TO BECOME THE USER STATE FOR THE USER'S ID
+                // ingredients_list: newShoppingList.ingredients_list
             })
         })
         const createdList = await response.json()
-        console.log(createdList)
+        
         setShoppingLists(prev => [...prev, createdList])
+
+        for (const ingredient of shoppingListIngredients) {
+            console.log(createdList)
+            const newShoppingListIngredient = {shopping_id: createdList.shopping_id, ingredient: ingredient.ingredient_id, quantity: ingredient.quantity}
+            console.log(newShoppingListIngredient)
+                const res = await fetch(`http://18.234.134.4:8000/api/shoppinglistingredient`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newShoppingListIngredient)
+                })
+        }
         setNewShoppingList({
             name: '',
             user: 1, // THIS WILL NEED TO BECOME THE USER STATE FOR THE USER'S ID
             ingredients_list: [],
         })
         setCreateListView(false)
+    }
+
+    const addShoppingListIngredient = (event) => {
+        event.preventDefault();
+        console.log(shoppingListIngredients)
+        if (shoppingListIngredients.length === 0) {
+            console.log('add first')
+            setShoppingListIngredients([{ingredient : allIngredients[0].ingredient_id, name : allIngredients[0].name_of_ingredient, quantity : 0}])
+        } else {
+            console.log('regular add')
+            setShoppingListIngredients(prev => [...prev, {ingredient : allIngredients[0].ingredient_id, name : allIngredients[0].name_of_ingredient, quantity : 0}])
+        }
+    }
+
+    const removeShoppingListIngredient = (event, ingIndex) => {
+        event.preventDefault();
+        const remove = shoppingListIngredients.filter((_, index) => index !== ingIndex)
+        console.log(remove)
+        setShoppingListIngredients(remove)
     }
 
     const handleDeleteList = async (event) => {
@@ -126,7 +169,33 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
             <form>
                 <label name='name'>New List Name: </label>
                 <input name='name' value={newShoppingList.name} onChange={handleChange}></input>
-
+                {shoppingListIngredients.map((ingredient, index) => (
+                        <div key={index}>
+                            <label htmlFor={`ingredient ${index}`} >Ingredient: </label>
+                            <select name={`ingredient ${index}`} value={ingredient.ingredient}
+                                onChange={(event) => {
+                                    let tempShoppingListIngredients = [...shoppingListIngredients];
+                                    tempShoppingListIngredients[index] = { ...tempShoppingListIngredients[index], ingredient: parseInt(event.target.value, 10) };
+                                    setShoppingListIngredients(tempShoppingListIngredients);
+                                }}>
+                                {allIngredients.map((globalIngredient, index) => (
+                                    globalIngredient.ingredient_id === ingredient.ingredient
+                                        ? <option key={index} value={globalIngredient.ingredient_id} > {globalIngredient.name_of_ingredient} </option>
+                                        : <option key={index} value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
+                                ))}
+                            </select>
+                            <label htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
+                            <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity ?? 0}
+                                onChange={(event) => {
+                                    const tempIngredients = [...shoppingListIngredients];
+                                    tempIngredients[index].quantity = parseInt(event.target.value, 10);
+                                    setShoppingListIngredients(tempIngredients);
+                                }} ></input>
+                                
+                            <button className='actionBtn' onClick={(event) => removeShoppingListIngredient(event, index)}>Remove </button>
+                        </div>
+                    ))}
+                <button className='actionBtn' onClick={addShoppingListIngredient}>Add Ingredient</button>
                 <button type="submit" onClick={handleCreateNewList}>Submit New List</button>
             </form>
             </>
