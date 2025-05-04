@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const NewRecipe = ({allIngredients}) => {
 
-    const [recipeData, setRecipeData] = useState({ ingredients: [] })
+    const [recipeData, setRecipeData] = useState({ ingredients: [], user: 1 })
 
     const navigate = useNavigate();
 
@@ -24,10 +24,16 @@ const NewRecipe = ({allIngredients}) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(recipeData)
+            body: JSON.stringify({
+                name: recipeData.name,
+                instructions: recipeData.instructions,
+                ingredients: recipeData.ingredients,
+                user: 1
+            })
         })
-
+        
         const newRecipe = await response.json()
+        console.log(newRecipe)
         setRecipeData(newRecipe)
         navToShow(event)
     }
@@ -57,9 +63,9 @@ const NewRecipe = ({allIngredients}) => {
                     </textarea>
                     <select name='ingredients' multiple 
                     onChange={(event) => {
-                                    const selected = Array.from(event.target.selectedOptions, option => option.value);
-                                    setRecipeData({...recipeData, ingredients: selected})
-                                    }}>
+                        const selected = Array.from(event.target.selectedOptions, option => option.value);
+                        setRecipeData({...recipeData, ingredients: selected})
+                        }}>
                     {allIngredients.map((ingredient) => (
                         <option key={ingredient.ingredient_id} name={ingredient.name_of_ingredient} value={ingredient.ingredient_id}>
                             {ingredient.name_of_ingredient}

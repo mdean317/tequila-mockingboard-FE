@@ -35,24 +35,24 @@ const App = () => {
     getAllIngredients();
   }, []);
 
-  const handleAuthSuccess = (userData) => {
-    const authToken = userData?.key;
-    if (authToken) {
-      localStorage.setItem('authToken', authToken);
-      setUser('loggedIn');
-      console.log('App: handleAuthSuccess - user set to:', 'loggedIn');
-      navigate('/ingredients');
-    } else {
-      console.error('App: Authentication successful, but no token received.');
-    }
-  };
+  // const handleAuthSuccess = (userData) => {
+  //   const authToken = userData?.key;
+  //   if (authToken) {
+  //     localStorage.setItem('authToken', authToken);
+  //     setUser('loggedIn');
+  //     console.log('App: handleAuthSuccess - user set to:', 'loggedIn');
+  //     navigate('/ingredients');
+  //   } else {
+  //     console.error('App: Authentication successful, but no token received.');
+  //   }
+  // };
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    setUser('');
-    console.log('App: handleLogout - user set to:', '');
-    navigate('/');
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem('authToken');
+  //   setUser('');
+  //   console.log('App: handleLogout - user set to:', '');
+  //   navigate('/');
+  // };
 
   useEffect(() => {
     const getShoppingLists = async () => {
@@ -63,13 +63,6 @@ const App = () => {
       }
     };
     getShoppingLists();
-  }, []);
-
-  useEffect(() => {
-    const fetchShoppingLists = async () => {
-      // ... your shopping list fetching logic ...
-    };
-    fetchShoppingLists();
   }, []);
 
   return (
@@ -84,9 +77,9 @@ const App = () => {
             userShoppingLists={userShoppingLists}
           />
         } />
-        <Route path="/signin" element={<SignIn onAuthSuccess={handleAuthSuccess} />} />
-        <Route path="/signup" element={<SignUp onAuthSuccess={handleAuthSuccess} />} />
-        <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
+        {/* <Route path="/signin" element={<SignIn onAuthSuccess={handleAuthSuccess} />} />
+        <Route path="/signup" element={<SignUp onAuthSuccess={handleAuthSuccess} />} /> */}
+        {/* <Route path="/logout" element={<Logout onLogout={handleLogout} />} /> */}
         <Route path="/ingredients/list" element={<IngredientList ingredients={allIngredients} setIngredients={setAllIngredients} />} />
         <Route path="/shoppinglists" element={<ShoppingList allIngredients={allIngredients} setAllIngredients={setAllIngredients} userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />
         <Route path="/shoppinglists/new" element={<ShoppingList userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />
@@ -99,11 +92,11 @@ const App = () => {
   );
 };
 
-const Logout = ({ onLogout }) => {
-  useEffect(() => {
-    onLogout();
-  }, [onLogout]);
-  return <p>Logging out...</p>;
-};
+// const Logout = ({ onLogout }) => {
+//   useEffect(() => {
+//     onLogout();
+//   }, [onLogout]);
+//   return <p>Logging out...</p>;
+// };
 
 export default App;
