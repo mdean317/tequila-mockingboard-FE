@@ -10,6 +10,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
         name: '',
         user: 1, // THIS WILL NEED TO BECOME THE USER STATE FOR THE USER'S ID
         ingredients_list: [],
+        quantity: null
     })
 
     const [updateShoppingList, setUpdateShoppingList] = useState({
@@ -125,16 +126,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
             <form>
                 <label name='name'>New List Name: </label>
                 <input name='name' value={newShoppingList.name} onChange={handleChange}></input>
-                <select name='ingredients_list' multiple value={newShoppingList.ingredients_list} onChange={(e) => {
-                    const selected = Array.from(e.target.selectedOptions, option => option.value);
-                    setNewShoppingList({...newShoppingList, ingredients_list: selected})
-                }}>
-                    {allIngredients.map((ingredient) => (
-                        <option key={ingredient.ingredient_id} name={ingredient.name_of_ingredient} value={ingredient.ingredient_id}>
-                            {ingredient.name_of_ingredient}
-                        </option>
-                    ))}
-                </select>
+
                 <button type="submit" onClick={handleCreateNewList}>Submit New List</button>
             </form>
             </>
@@ -148,12 +140,18 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
             <form>
                 <label name='name'>Name: </label>
                 <input name='name' value={updateShoppingList.name} onChange={handleChange}></input>
-                <select name='ingredients_list' multiple value={updateShoppingList.ingredients_list} onChange={(e) => {
-                    const selected = Array.from(e.target.selectedOptions, option => option.value);
-                    setUpdateShoppingList({...updateShoppingList, ingredients_list: selected})
+                <select name='ingredients_list' multiple value={newShoppingList.ingredients_list} onChange={(e) => {
+                    const selected = Array.from(e.target.selectedOptions, option => parseInt(option.value));
+                    console.log(selected)
+                    const formattedIngredients = selected.map(id => ({
+                        ingredient: parseInt(id, 10),
+                        quantity: 1,
+                    }))
+                    console.log(formattedIngredients)
+                    setNewShoppingList({...newShoppingList, ingredients_list: selected})
                 }}>
                     {allIngredients.map((ingredient) => (
-                        <option key={ingredient.ingredient_id} name={ingredient.name_of_ingredient} value={ingredient.name_of_ingredient}>
+                        <option key={ingredient.ingredient_id} name={ingredient.name_of_ingredient} value={ingredient.ingredient_id}>
                             {ingredient.name_of_ingredient}
                         </option>
                     ))}
