@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = ({ user }) => {
   return (
-    <nav className="flex justify-around p-4" id="top-navbar"> {/* */}
+    <nav className="flex justify-around p-2" id="top-navbar"> {/* */}
 
       <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/">Home</Link>
       {user === true ? (
@@ -24,5 +24,7 @@ const Navbar = ({ user }) => {
     </nav>
   );
 };
+
+
 
 export default Navbar;
