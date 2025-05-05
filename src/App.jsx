@@ -8,6 +8,9 @@ import SignUp from './assets/components/auth/SignUp';
 import Home from './assets/components/Homepage/Homepage';
 import IngredientList from './assets/components/Ingredient/IngredientList';
 import UserProfile from './assets/components/User/UserProfile';
+import Recipe from './assets/components/Recipe/Recipe'
+import Recipes from './assets/components/Recipes/Recipes'
+import NewRecipe from './assets/components/NewRecipe/NewRecipe'
 
 const App = () => {
     const [user, setUser] = useState(null);
@@ -85,8 +88,8 @@ const App = () => {
           />
         } />
         {/* <Route path="/logout" element={<Logout onLogout={handleLogout} />} /> */}
-        <Route path="/signin" element={<SignIn onAuthSuccess={handleAuthSuccess} />} />
-        <Route path="/signup" element={<SignUp onAuthSuccess={handleAuthSuccess} />} />
+        {/* <Route path="/signin" element={<SignIn onAuthSuccess={handleAuthSuccess} />} />
+        <Route path="/signup" element={<SignUp onAuthSuccess={handleAuthSuccess} />} /> */}
         <Route path="/ingredients/list" element={<IngredientList ingredients={allIngredients} setIngredients={setAllIngredients} />} />
         <Route path="/shoppinglists" element={<ShoppingList allIngredients={allIngredients} setAllIngredients={setAllIngredients} userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />
         <Route path="/shoppinglists/new" element={<ShoppingList userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />
