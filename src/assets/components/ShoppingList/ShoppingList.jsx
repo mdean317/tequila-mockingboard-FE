@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react'
 
-const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setAllIngredients}) => {
+const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients}) => {
 
-    const [shoppingListIngredients, setShoppingListIngredients] = useState([])
     const [createListView, setCreateListView] = useState(false)
     const [updateListView, setUpdateListView] = useState(false)
 
-    const [newListIngredients, setNewListIngredients] = useState([])
-    const [updateListIngredients, setUpdateListIngredients] = useState([])
+    const [shoppingListIngredients, setShoppingListIngredients] = useState([])
 
     const [newShoppingList, setNewShoppingList] = useState({ ingredients_list: [] })
+    const [newListIngredients, setNewListIngredients] = useState([])
 
+    const [updateListIngredients, setUpdateListIngredients] = useState([])
     const [updateShoppingList, setUpdateShoppingList] = useState({
         shopping_id: null,
         name: '',
@@ -24,10 +24,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
             setShoppingListIngredients(JSONdata || []);
         }
         getAllShoppingListIngredients()
-
     }, []);
-
-// setRecipeData = setNewShoppingList
 
     const handleChange = (event) => {
         event.preventDefault()
@@ -88,6 +85,14 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
         })
         setNewListIngredients([])
 
+        const res = await fetch(`http://18.234.134.4:8000/api/shoppinglist`);
+        const shopList = await res.json();
+        setShoppingLists(shopList);
+    
+        const resIngredients = await fetch(`http://18.234.134.4:8000/api/shoppinglistingredient`);
+        const updatedIngredients = await resIngredients.json();
+        setShoppingListIngredients(updatedIngredients);
+
         setCreateListView(false)
     }
 
@@ -125,22 +130,8 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
         setNewListIngredients(remove)
     }
 
-    const handleDeleteList = async (event) => {
-        console.log(event.shopping_id)
-        await fetch(`http://18.234.134.4:8000/api/shoppinglist/${event.shopping_id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        const res = await fetch(`http://18.234.134.4:8000/api/shoppinglist`)
-        const shopList = await res.json();
-        setShoppingLists(shopList)
-    }
-
     const handleUpdateShoppingList = async (event) => {
         event.preventDefault();
-      
         try {
           // Step 1: Update the shopping list name
           const response = await fetch(`http://18.234.134.4:8000/api/shoppinglist/${updateShoppingList.shopping_id}`, {
@@ -148,7 +139,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 name: updateShoppingList.name,
-                user: updateShoppingList.user,  // replace with real user ID
+                user: updateShoppingList.user,  
                 ingredients_list: updateListIngredients.map(i => i.ingredient)
             })
           });
@@ -158,7 +149,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
             throw new Error(`Update error: ${msg}`);
           }
       
-          // Step 2: Delete all existing shoppinglistingredient entries for this list
+          // Deletes all existing shoppinglistingredient entries in list to clean up
           const deletePromises = shoppingListIngredients
             .filter(i => i.shopping_list === updateShoppingList.shopping_id)
             .map(i =>
@@ -169,7 +160,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
             );
           await Promise.all(deletePromises);
       
-          // Step 3: Add new ingredient rows
+          // Add new ingredient rows into object
           for (const ingredient of updateListIngredients) {
             const newItem = {
               shopping_list: updateShoppingList.shopping_id,
@@ -183,7 +174,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
             });
           }
       
-          // Step 4: Refresh list data
+          // Refresh on submission
           const res = await fetch(`http://18.234.134.4:8000/api/shoppinglist`);
           const shopList = await res.json();
           setShoppingLists(shopList);
@@ -198,138 +189,179 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
         }
       };
 
+    const handleDeleteList = async (event) => {
+        console.log(event.shopping_id)
+        await fetch(`http://18.234.134.4:8000/api/shoppinglist/${event.shopping_id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        const res = await fetch(`http://18.234.134.4:8000/api/shoppinglist`)
+        const shopList = await res.json();
+        setShoppingLists(shopList)
+    }
+
     return(
         <>
             {updateListView == false && createListView == false ?
-            <>
-            <h1 className='text-8xl p-2 m-2'>Shopping List Page</h1>
-            
-            <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' onClick={(() => (setCreateListView(true), setUpdateListView(false)))}>Create New Shopping List</button>
+                <>
+                    <h1 className='text-8xl p-2 m-2'>Prepare your own mixology event</h1>
+                    {/* HERO FOR CREATING A NEW SHOPPING LIST */}
+                    <div className='flex justify-around gap-5 m-10'>
+                        <section>
+                            <h2 className='text-6xl m-5'>Build your mixology list!</h2>
+                            <p className='text-2xl text-left italic'>Preparing for an event is always a lot of work, especially when it comes to organizing and preparing drinks!  Use this to help organize and plan out what you need to buy!</p>
+                        </section>
+                        <section className='flex align-center'>
+                            <button className='p-2 m-2 text-4xl font-bold shadow-2xl-bg-teal-200 bg-yellow-600 hover:cursor-pointer hover:bg-yellow-800 rounded-full' onClick={(() => (setCreateListView(true), setUpdateListView(false)))}>Click here to get started!</button>
+                        </section>
+                    </div>
+                    <h2 className='mt-10 text-6xl p-2 m-2'>Your Event Lists:</h2>
+                    <div className='flex flex-wrap justify-around'>
+                    {userShoppingLists.map((shoppinglist) => (
+                        <div className='p-5 m-5 min-w-100 w-100 min-h-100 h-auto flex flex-col justify-evenly bg-gradient-to-br from-cyan-400 to-purple-600' key={shoppinglist.shopping_id}>
+                            <div className=''>
+                                <h3 className='text-4xl p-2 m-2'>{shoppinglist.name}</h3>
+                                <h3 className='text-3xl p-2 m-2'>Ingredients List</h3>
+                                {shoppingListIngredients.filter((listIngredient) => listIngredient.shopping_list === shoppinglist.shopping_id).map((listIngredient) => (
+                                    allIngredients.filter((ingredient) => ingredient.ingredient_id === listIngredient.ingredient).map((ingredient) => (
+                                        <p key={ingredient.ingredient_id}>{ingredient.name_of_ingredient} Quantity: {listIngredient.quantity}</p>
+                                    ))
+                                ))}
+                            </div>
+                            <div className='flex justify-between'>
+                            {/* Update Shopping List */}
+                            <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' onClick={() => {
+                                setCreateListView(false);
+                                setUpdateListView(true);
 
-            <h2 className='text-6xl p-2 m-2'>Your Shopping Lists:</h2>
-            {userShoppingLists.map((shoppinglist) => (
-                <div key={shoppinglist.shopping_id}>
-                    <h3 className='text-4xl p-2 m-2'>{shoppinglist.name}</h3>
-                    {shoppingListIngredients.filter((listIngredient) => listIngredient.shopping_list === shoppinglist.shopping_id).map((listIngredient) => (
-                        allIngredients.filter((ingredient) => ingredient.ingredient_id === listIngredient.ingredient).map((ingredient) => (
-                            <p key={ingredient.ingredient_id}>{ingredient.name_of_ingredient} Quantity: {listIngredient.quantity}</p>
-                        ))
+                                const selectedIngredients = shoppingListIngredients
+                                    .filter((ingredients) => ingredients.shopping_list === shoppinglist.shopping_id)
+                                    .map((ing) => ({
+                                        ingredient: ing.ingredient,
+                                        quantity: ing.quantity,
+                                        name: allIngredients.find(a => a.ingredient_id === ing.ingredient)?.name_of_ingredient || ''
+                                    }))
+
+                                setUpdateShoppingList({
+                                    ...shoppinglist,
+                                    ingredients_list: selectedIngredients.map(({ingredient}) => ingredient)
+                                });
+
+                                setUpdateListIngredients(selectedIngredients)
+
+                            }}>Update Shopping List</button>
+
+                            {/* Delte Shopping List */}
+                            <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(() => handleDeleteList(shoppinglist))}>Delete {shoppinglist.name}</button>
+                        </div>
+                    </div>
                     ))}
-                    {/* Update Shopping List */}
-                    <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' onClick={() => {
-                        setCreateListView(false);
-                        setUpdateListView(true);
-
-                        const selectedIngredients = shoppingListIngredients
-                            .filter((ingredients) => ingredients.shopping_list === shoppinglist.shopping_id)
-                            .map((ing) => ({
-                                ingredient: ing.ingredient,
-                                quantity: ing.quantity,
-                                name: allIngredients.find(a => a.ingredient_id === ing.ingredient)?.name_of_ingredient || ''
-                            }))
-
-                        setUpdateShoppingList({
-                            ...shoppinglist,
-                            ingredients_list: selectedIngredients.map(({ingredient}) => ingredient)
-                        });
-
-                        setUpdateListIngredients(selectedIngredients)
-
-                    }}>Update Shopping List</button>
-                    {/* Delte Shopping List */}
-                    <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(() => handleDeleteList(shoppinglist))}>Delete {shoppinglist.name}</button>
-                </div>
-            ))}
-            </>
-            :<></>
+                    </div>
+                </>
+            :
+                <></>
             }
+
             {createListView == true ? 
-            <>
-            <h2 className='text-6xl p-2 m-2'>Create New Shopping List:</h2>
-            <form>
-                <label name='name'>New List Name: </label>
-                <input name='name' value={newShoppingList.name} onChange={handleChange}></input>
-                {newListIngredients.map((ingredient, index) => (
+                <>
+                <h2 className='text-6xl p-2 m-2'>Create New Shopping List:</h2>
+                <form>
+                    <label name='name'>New List Name: </label>
+                    <input name='name' value={newShoppingList.name} onChange={handleChange}></input>
+                    {newListIngredients.map((ingredient, index) => (
+                            <div key={index}>
+                                <label htmlFor={`ingredient ${index}`} >Ingredient: </label>
+                                <select className='bg-gray-600' name={`ingredient ${index}`} value={ingredient.ingredient}
+                                    onChange={(event) => {
+                                        let tempShoppingListIngredients = [...newListIngredients];
+                                        tempShoppingListIngredients[index] = { ...tempShoppingListIngredients[index], ingredient: parseInt(event.target.value, 10) };
+                                        setNewListIngredients(tempShoppingListIngredients);
+                                    }}>
+                                    {allIngredients.map((globalIngredient, index) => (
+                                        globalIngredient.ingredient_id === ingredient.ingredient
+                                            ? <option key={index} value={globalIngredient.ingredient_id} > {globalIngredient.name_of_ingredient} </option>
+                                            : <option key={index} value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
+                                    ))}
+                                </select>
+                                <label htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
+                                <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity ?? 0}
+                                    onChange={(event) => {
+                                        const tempIngredients = [...newListIngredients];
+                                        tempIngredients[index].quantity = parseInt(event.target.value, 10);
+                                        setNewListIngredients(tempIngredients);
+                                    }} ></input>
+                                    
+                                <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(event) => removeShoppingListIngredient(event, index)}>Remove </button>
+                            </div>
+                        ))}
+                    <button className='p-2 m-2 font-bold bg-green-500 hover:cursor-pointer hover:bg-green-700 rounded-full' onClick={addShoppingListIngredient}>Add Ingredient</button>
+                    <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' type="submit" onClick={handleCreateNewList}>Submit New List</button>
+                    <button className='p-2 m-2 font-bold bg-gray-500 hover:cursor-pointer hover:bg-gray-700 rounded-full' onClick={(() => (
+                    setCreateListView(false),
+                    setUpdateListView(false),
+                    setNewListIngredients([]),
+                    setNewShoppingList({
+                        shopping_id: null,
+                        name: '',
+                        ingredients_list: [],
+                    }
+                    )))}>Return</button>
+                </form>
+                </>
+            :
+                <></>
+            }
+
+            {updateListView == true ?
+                <>
+                    <h2 className='text-6xl'>Update Shopping List:</h2>
+                    <form>
+                    <label name='name'>Update Name: </label>
+                    <input name='name' value={updateShoppingList.name} onChange={handleChange}></input>
+                        {updateListIngredients.map((ingredient, index) => (
                         <div key={index}>
                             <label htmlFor={`ingredient ${index}`} >Ingredient: </label>
-                            <select name={`ingredient ${index}`} value={ingredient.ingredient}
+                            <select className='black' name={`ingredient ${index}`} value={ingredient.ingredient}
                                 onChange={(event) => {
-                                    let tempShoppingListIngredients = [...newListIngredients];
+                                    let tempShoppingListIngredients = [...updateListIngredients];
                                     tempShoppingListIngredients[index] = { ...tempShoppingListIngredients[index], ingredient: parseInt(event.target.value, 10) };
-                                    setNewListIngredients(tempShoppingListIngredients);
+                                    setUpdateListIngredients(tempShoppingListIngredients);
                                 }}>
                                 {allIngredients.map((globalIngredient, index) => (
                                     globalIngredient.ingredient_id === ingredient.ingredient
-                                        ? <option key={index} value={globalIngredient.ingredient_id} > {globalIngredient.name_of_ingredient} </option>
+                                        ? <option key={index} value={globalIngredient.ingredient_id}> {globalIngredient.name_of_ingredient} </option>
                                         : <option key={index} value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
                                 ))}
                             </select>
                             <label htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
                             <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity ?? 0}
                                 onChange={(event) => {
-                                    const tempIngredients = [...newListIngredients];
+                                    const tempIngredients = [...updateListIngredients];
                                     tempIngredients[index].quantity = parseInt(event.target.value, 10);
-                                    setNewListIngredients(tempIngredients);
+                                    setUpdateListIngredients(tempIngredients);
                                 }} ></input>
                                 
-                            <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(event) => removeShoppingListIngredient(event, index)}>Remove </button>
+                            <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(event) => removeUpdateShoppingListIngredient(event, index)}>Remove </button>
                         </div>
-                    ))}
-                <button className='p-2 m-2 font-bold bg-green-500 hover:cursor-pointer hover:bg-green-700 rounded-full' onClick={addShoppingListIngredient}>Add Ingredient</button>
-                <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' type="submit" onClick={handleCreateNewList}>Submit New List</button>
-            </form>
-            </>
+                        ))}
+                    <button className='p-2 m-2 font-bold bg-green-500 hover:cursor-pointer hover:bg-green-700 rounded-full' onClick={updateShoppingListIngredient}>Add Ingredient</button>
+                    <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full'  type="submit" onClick={handleUpdateShoppingList}>Update List</button>
+                    <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' onClick={(() => (
+                    setCreateListView(false),
+                    setUpdateListView(false),
+                    setUpdateListIngredients([]),
+                    setUpdateShoppingList({
+                        shopping_id: null,
+                        name: '',
+                        ingredients_list: [],
+                    }
+                    )))}>Return</button>
+                    </form>
+                </>
             :
-            <></>
-            }
-
-            {updateListView == true ?
-            <>
-                <h2 className='text-6xl'>Update Shopping List:</h2>
-                <form>
-                <label name='name'>Update Name: </label>
-                <input name='name' value={updateShoppingList.name} onChange={handleChange}></input>
-                    {updateListIngredients.map((ingredient, index) => (
-                    <div key={index}>
-                        <label htmlFor={`ingredient ${index}`} >Ingredient: </label>
-                        <select name={`ingredient ${index}`} value={ingredient.ingredient}
-                            onChange={(event) => {
-                                let tempShoppingListIngredients = [...updateListIngredients];
-                                tempShoppingListIngredients[index] = { ...tempShoppingListIngredients[index], ingredient: parseInt(event.target.value, 10) };
-                                setUpdateListIngredients(tempShoppingListIngredients);
-                            }}>
-                            {allIngredients.map((globalIngredient, index) => (
-                                globalIngredient.ingredient_id === ingredient.ingredient
-                                    ? <option key={index} value={globalIngredient.ingredient_id}> {globalIngredient.name_of_ingredient} </option>
-                                    : <option key={index} value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
-                            ))}
-                        </select>
-                        <label htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
-                        <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity ?? 0}
-                            onChange={(event) => {
-                                const tempIngredients = [...updateListIngredients];
-                                tempIngredients[index].quantity = parseInt(event.target.value, 10);
-                                setUpdateListIngredients(tempIngredients);
-                            }} ></input>
-                            
-                        <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(event) => removeUpdateShoppingListIngredient(event, index)}>Remove </button>
-                    </div>
-                    ))}
-                <button className='p-2 m-2 font-bold bg-green-500 hover:cursor-pointer hover:bg-green-700 rounded-full' onClick={updateShoppingListIngredient}>Add Ingredient</button>
-                <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full'  type="submit" onClick={handleUpdateShoppingList}>Update List</button>
-                <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' onClick={(() => (
-                setCreateListView(false),
-                setUpdateListView(false),
-                setUpdateShoppingList({
-                    shopping_id: null,
-                    name: '',
-                    ingredients_list: [],
-                }
-                )))}>Return</button>
-                </form>
-            </>
-            :
-            <></>
+                <></>
             }
         </>
     )
