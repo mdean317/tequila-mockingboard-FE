@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Tagesschrift&display=swap');
 
 html, body {
   margin: 0;
@@ -7,6 +7,15 @@ html, body {
   background-color: black;
 
   height: 100%;
+
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+  color: white
+}
+
+h1, h2 {
+  font-family: "tagesschrift-regular";
+  color: white
 }
 
 #root {
