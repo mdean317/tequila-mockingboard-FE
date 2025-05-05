@@ -206,58 +206,60 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients}) => 
         <>
             {updateListView == false && createListView == false ?
                 <>
-                    <h1 className='text-8xl p-2 m-2'>Prepare your own mixology event</h1>
+                    <h1 className='text-8xl p-5 m-2 bg-teal-700/75 rounded-full'>Prepare your own mixology event</h1>
                     {/* HERO FOR CREATING A NEW SHOPPING LIST */}
-                    <div className='flex justify-around gap-5 m-10'>
+                    <div className='flex justify-around gap-5 m-10 p-10 bg-gray-800/95'>
                         <section>
-                            <h2 className='text-6xl m-5'>Build your mixology list!</h2>
+                            <h2 className='text-6xl pb-10'>Build your mixology list!</h2>
                             <p className='text-2xl text-left italic'>Preparing for an event is always a lot of work, especially when it comes to organizing and preparing drinks!  Use this to help organize and plan out what you need to buy!</p>
                         </section>
                         <section className='flex align-center'>
-                            <button className='p-2 m-2 text-4xl font-bold shadow-2xl-bg-teal-200 bg-yellow-600 hover:cursor-pointer hover:bg-yellow-800 rounded-full' onClick={(() => (setCreateListView(true), setUpdateListView(false)))}>Click here to get started!</button>
+                            <button className='p-2 m-2 text-4xl font-bold shadow-2xl-bg-teal-200 bg-yellow-600 hover:cursor-pointer hover:bg-yellow-800 rounded-full' onClick={(() => (setCreateListView(true), setUpdateListView(false)))}>Start here to prepare your new event!</button>
                         </section>
                     </div>
-                    <h2 className='mt-10 text-6xl p-2 m-2'>Your Event Lists:</h2>
-                    <div className='flex flex-wrap justify-around'>
-                    {userShoppingLists.map((shoppinglist) => (
-                        <div className='p-5 m-5 min-w-100 w-100 min-h-100 h-auto flex flex-col justify-evenly bg-gradient-to-br from-cyan-400 to-purple-600' key={shoppinglist.shopping_id}>
-                            <div className=''>
-                                <h3 className='text-4xl p-2 m-2'>{shoppinglist.name}</h3>
-                                <h3 className='text-3xl p-2 m-2'>Ingredients List</h3>
-                                {shoppingListIngredients.filter((listIngredient) => listIngredient.shopping_list === shoppinglist.shopping_id).map((listIngredient) => (
-                                    allIngredients.filter((ingredient) => ingredient.ingredient_id === listIngredient.ingredient).map((ingredient) => (
-                                        <p key={ingredient.ingredient_id}>{ingredient.name_of_ingredient} Quantity: {listIngredient.quantity}</p>
-                                    ))
-                                ))}
+                    <div className='bg-teal-700/60 m-5'>
+                        <h2 className='text-6xl py-10 bg-orange-600/60 rounded-ee-full'>Your Event Lists:</h2>
+                        <div className='flex flex-wrap justify-around'>
+                        {userShoppingLists.map((shoppinglist) => (
+                            <div className='p-5 m-5 min-w-100 w-100 min-h-100 h-auto flex flex-col justify-evenly bg-gradient-to-br rounded-lg from-cyan-400 to-purple-600' key={shoppinglist.shopping_id}>
+                                <div className='rounded-full bg-black/50 py-10 mx-5'>
+                                    <h3 className='text-4xl p-2 m-2'>{shoppinglist.name}</h3>
+                                    <h3 className='text-3xl p-2 m-2'>Ingredients List</h3>
+                                    {shoppingListIngredients.filter((listIngredient) => listIngredient.shopping_list === shoppinglist.shopping_id).map((listIngredient) => (
+                                        allIngredients.filter((ingredient) => ingredient.ingredient_id === listIngredient.ingredient).map((ingredient) => (
+                                            <p key={ingredient.ingredient_id}>{ingredient.name_of_ingredient} Quantity: {listIngredient.quantity}</p>
+                                        ))
+                                    ))}
+                                </div>
+                                <div className='flex justify-between'>
+                                {/* Update Shopping List */}
+                                <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' onClick={() => {
+                                    setCreateListView(false);
+                                    setUpdateListView(true);
+
+                                    const selectedIngredients = shoppingListIngredients
+                                        .filter((ingredients) => ingredients.shopping_list === shoppinglist.shopping_id)
+                                        .map((ing) => ({
+                                            ingredient: ing.ingredient,
+                                            quantity: ing.quantity,
+                                            name: allIngredients.find(a => a.ingredient_id === ing.ingredient)?.name_of_ingredient || ''
+                                        }))
+
+                                    setUpdateShoppingList({
+                                        ...shoppinglist,
+                                        ingredients_list: selectedIngredients.map(({ingredient}) => ingredient)
+                                    });
+
+                                    setUpdateListIngredients(selectedIngredients)
+
+                                }}>Update Shopping List</button>
+
+                                {/* Delte Shopping List */}
+                                <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(() => handleDeleteList(shoppinglist))}>Delete {shoppinglist.name}</button>
                             </div>
-                            <div className='flex justify-between'>
-                            {/* Update Shopping List */}
-                            <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' onClick={() => {
-                                setCreateListView(false);
-                                setUpdateListView(true);
-
-                                const selectedIngredients = shoppingListIngredients
-                                    .filter((ingredients) => ingredients.shopping_list === shoppinglist.shopping_id)
-                                    .map((ing) => ({
-                                        ingredient: ing.ingredient,
-                                        quantity: ing.quantity,
-                                        name: allIngredients.find(a => a.ingredient_id === ing.ingredient)?.name_of_ingredient || ''
-                                    }))
-
-                                setUpdateShoppingList({
-                                    ...shoppinglist,
-                                    ingredients_list: selectedIngredients.map(({ingredient}) => ingredient)
-                                });
-
-                                setUpdateListIngredients(selectedIngredients)
-
-                            }}>Update Shopping List</button>
-
-                            {/* Delte Shopping List */}
-                            <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(() => handleDeleteList(shoppinglist))}>Delete {shoppinglist.name}</button>
                         </div>
-                    </div>
-                    ))}
+                        ))}
+                        </div>
                     </div>
                 </>
             :
@@ -266,49 +268,63 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients}) => 
 
             {createListView == true ? 
                 <>
-                <h2 className='text-6xl p-2 m-2'>Create New Shopping List:</h2>
-                <form>
-                    <label name='name'>New List Name: </label>
-                    <input name='name' value={newShoppingList.name} onChange={handleChange}></input>
-                    {newListIngredients.map((ingredient, index) => (
-                            <div key={index}>
-                                <label htmlFor={`ingredient ${index}`} >Ingredient: </label>
-                                <select className='bg-gray-600' name={`ingredient ${index}`} value={ingredient.ingredient}
-                                    onChange={(event) => {
-                                        let tempShoppingListIngredients = [...newListIngredients];
-                                        tempShoppingListIngredients[index] = { ...tempShoppingListIngredients[index], ingredient: parseInt(event.target.value, 10) };
-                                        setNewListIngredients(tempShoppingListIngredients);
-                                    }}>
-                                    {allIngredients.map((globalIngredient, index) => (
-                                        globalIngredient.ingredient_id === ingredient.ingredient
-                                            ? <option key={index} value={globalIngredient.ingredient_id} > {globalIngredient.name_of_ingredient} </option>
-                                            : <option key={index} value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
-                                    ))}
-                                </select>
-                                <label htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
-                                <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity ?? 0}
-                                    onChange={(event) => {
-                                        const tempIngredients = [...newListIngredients];
-                                        tempIngredients[index].quantity = parseInt(event.target.value, 10);
-                                        setNewListIngredients(tempIngredients);
-                                    }} ></input>
-                                    
-                                <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(event) => removeShoppingListIngredient(event, index)}>Remove </button>
-                            </div>
-                        ))}
-                    <button className='p-2 m-2 font-bold bg-green-500 hover:cursor-pointer hover:bg-green-700 rounded-full' onClick={addShoppingListIngredient}>Add Ingredient</button>
-                    <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' type="submit" onClick={handleCreateNewList}>Submit New List</button>
-                    <button className='p-2 m-2 font-bold bg-gray-500 hover:cursor-pointer hover:bg-gray-700 rounded-full' onClick={(() => (
-                    setCreateListView(false),
-                    setUpdateListView(false),
-                    setNewListIngredients([]),
-                    setNewShoppingList({
-                        shopping_id: null,
-                        name: '',
-                        ingredients_list: [],
-                    }
-                    )))}>Return</button>
-                </form>
+                <div>
+                    <h2 className='text-8xl p-5 m-2 bg-teal-700/75 rounded-full'>Create New Event List:</h2>
+                    <form className='p-10 m-5 w-auto h-auto flex flex-col justify-evenly bg-gradient-to-tr from-red-400/90 to-purple-600/60'>
+                        <section className='flex justify-center'>
+                            <label className='font-[tagesschrift-regular] text-6xl mr-10' name='name'>List Name: </label>
+                            <input className='text-4xl text-black bg-white/50 pl-5 w-150' name='name' value={newShoppingList.name} onChange={handleChange} placeholder='Write Here'></input>
+                        </section>
+                        <section className='bg-gray-500/70 my-5 rounded-xl px-20'>
+                            <button className='p-5 m-5 font-bold text-3xl bg-green-500 hover:cursor-pointer hover:bg-green-700 rounded-full' onClick={addShoppingListIngredient}>Add Ingredient</button>
+                            {newListIngredients.map((ingredient, index) => (
+                                <div className='pb-10 flex justify-evenly items-center' key={index}>
+                                    <div className='flex'>
+                                        <label className='font-[tagesschrift-regular] text-4xl mr-10' htmlFor={`ingredient ${index}`}>Ingredient: </label>
+                                        <select className='bg-black/25 font-[tagesschrift-regular] text-2xl text-center w-50' name={`ingredient ${index}`} value={ingredient.ingredient}
+                                            onChange={(event) => {
+                                                let tempShoppingListIngredients = [...newListIngredients];
+                                                tempShoppingListIngredients[index] = { ...tempShoppingListIngredients[index], ingredient: parseInt(event.target.value, 10) };
+                                                setNewListIngredients(tempShoppingListIngredients);
+                                            }}>
+                                            {allIngredients.map((globalIngredient, index) => (
+                                                globalIngredient.ingredient_id === ingredient.ingredient
+                                                    ? <option key={index} value={globalIngredient.ingredient_id}> {globalIngredient.name_of_ingredient} </option>
+                                                    : <option key={index} value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className='flex'>
+                                        <label className='font-[tagesschrift-regular] text-4xl mr-5' htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
+                                        <input className='bg-black/25 font-[tagesschrift-regular] text-2xl text-center w-50' type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity ?? 0}
+                                            onChange={(event) => {
+                                                const tempIngredients = [...newListIngredients];
+                                                tempIngredients[index].quantity = parseInt(event.target.value, 10);
+                                                setNewListIngredients(tempIngredients);
+                                            }} >
+                                        </input>
+                                    </div>
+                                    <button className='p-2 m-2 font-bold text-xl bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(event) => removeShoppingListIngredient(event, index)}>Remove Ingredient</button>
+                                </div>
+                            ))}
+                        </section>
+
+                        <section className='flex flex-col align-center w-auto'>
+                            <button className='p-2 m-2 font-bold text-4xl bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' type="submit" onClick={handleCreateNewList}>Create '{newShoppingList.name}' Event List</button>
+                            <button className='p-2 m-2 font-bold text-2xl bg-gray-500 hover:cursor-pointer hover:bg-gray-700 rounded-full' onClick={(() => (
+                            setCreateListView(false),
+                            setUpdateListView(false),
+                            setNewListIngredients([]),
+                            setNewShoppingList({
+                                shopping_id: null,
+                                name: '',
+                                ingredients_list: [],
+                            }
+                            )))}>Return to Event Shopping Lists</button>
+                        </section>
+
+                    </form>
+                </div>
                 </>
             :
                 <></>
@@ -316,48 +332,59 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients}) => 
 
             {updateListView == true ?
                 <>
-                    <h2 className='text-6xl'>Update Shopping List:</h2>
-                    <form>
-                    <label name='name'>Update Name: </label>
-                    <input name='name' value={updateShoppingList.name} onChange={handleChange}></input>
-                        {updateListIngredients.map((ingredient, index) => (
-                        <div key={index}>
-                            <label htmlFor={`ingredient ${index}`} >Ingredient: </label>
-                            <select className='black' name={`ingredient ${index}`} value={ingredient.ingredient}
-                                onChange={(event) => {
-                                    let tempShoppingListIngredients = [...updateListIngredients];
-                                    tempShoppingListIngredients[index] = { ...tempShoppingListIngredients[index], ingredient: parseInt(event.target.value, 10) };
-                                    setUpdateListIngredients(tempShoppingListIngredients);
-                                }}>
-                                {allIngredients.map((globalIngredient, index) => (
-                                    globalIngredient.ingredient_id === ingredient.ingredient
-                                        ? <option key={index} value={globalIngredient.ingredient_id}> {globalIngredient.name_of_ingredient} </option>
-                                        : <option key={index} value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
+                    <h2 className='text-8xl p-5 m-2 bg-teal-700/75 rounded-full'>Edit '{updateShoppingList.name}'</h2>
+                    <form className='p-10 m-5 w-auto h-auto flex flex-col justify-evenly bg-gradient-to-tr from-red-400/90 to-purple-600/60'>
+                        <section className='flex justify-center'>
+                            <label className='font-[tagesschrift-regular] text-6xl mr-10' name='name'>Update Event List Name: </label>
+                            <input className='text-4xl text-black bg-white/50 pl-5 w-150' name='name' value={updateShoppingList.name} onChange={handleChange}></input>
+                        </section>
+                        <section className='bg-gray-500/70 my-5 rounded-xl px-20'>
+                            <button className='p-5 m-5 font-bold text-3xl bg-green-500 hover:cursor-pointer hover:bg-green-700 rounded-full' onClick={updateShoppingListIngredient}>Add Ingredient</button>
+                                {updateListIngredients.map((ingredient, index) => (
+                                <div className='pb-10 flex justify-evenly items-center' key={index}>
+                                    <div className='flex'>
+                                        <label className='font-[tagesschrift-regular] text-4xl mr-10' htmlFor={`ingredient ${index}`} >Ingredient: </label>
+                                        <select className='bg-black/25 font-[tagesschrift-regular] text-2xl text-center w-50' name={`ingredient ${index}`} value={ingredient.ingredient}
+                                            onChange={(event) => {
+                                                let tempShoppingListIngredients = [...updateListIngredients];
+                                                tempShoppingListIngredients[index] = { ...tempShoppingListIngredients[index], ingredient: parseInt(event.target.value, 10) };
+                                                setUpdateListIngredients(tempShoppingListIngredients);
+                                            }}>
+                                            {allIngredients.map((globalIngredient, index) => (
+                                                globalIngredient.ingredient_id === ingredient.ingredient
+                                                    ? <option key={index} value={globalIngredient.ingredient_id}> {globalIngredient.name_of_ingredient} </option>
+                                                    : <option key={index} value={globalIngredient.ingredient_id}>{globalIngredient.name_of_ingredient}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className='flex'>
+                                        <label className='font-[tagesschrift-regular] text-4xl mr-5' htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
+                                        <input className='bg-black/25 font-[tagesschrift-regular] text-2xl text-center w-50' type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity ?? 0}
+                                            onChange={(event) => {
+                                                const tempIngredients = [...updateListIngredients];
+                                                tempIngredients[index].quantity = parseInt(event.target.value, 10);
+                                                setUpdateListIngredients(tempIngredients);
+                                            }}>
+                                        </input>
+                                    </div>
+                                    <button className='p-2 m-2 font-bold text-xl bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(event) => removeUpdateShoppingListIngredient(event, index)}>Remove Ingredient</button>
+                                </div>
                                 ))}
-                            </select>
-                            <label htmlFor={`ingredient ${index} quantity`}>Quantity: </label>
-                            <input type="number" name={`ingredient ${index} quantity`} value={ingredient.quantity ?? 0}
-                                onChange={(event) => {
-                                    const tempIngredients = [...updateListIngredients];
-                                    tempIngredients[index].quantity = parseInt(event.target.value, 10);
-                                    setUpdateListIngredients(tempIngredients);
-                                }} ></input>
-                                
-                            <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(event) => removeUpdateShoppingListIngredient(event, index)}>Remove </button>
-                        </div>
-                        ))}
-                    <button className='p-2 m-2 font-bold bg-green-500 hover:cursor-pointer hover:bg-green-700 rounded-full' onClick={updateShoppingListIngredient}>Add Ingredient</button>
-                    <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full'  type="submit" onClick={handleUpdateShoppingList}>Update List</button>
-                    <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' onClick={(() => (
-                    setCreateListView(false),
-                    setUpdateListView(false),
-                    setUpdateListIngredients([]),
-                    setUpdateShoppingList({
-                        shopping_id: null,
-                        name: '',
-                        ingredients_list: [],
-                    }
-                    )))}>Return</button>
+                        </section>
+
+                        <section className='flex flex-col align-center w-auto'>
+                            <button className='p-2 m-2 font-bold text-4xl bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full'  type="submit" onClick={handleUpdateShoppingList}>Update '{updateShoppingList.name}' Event List</button>
+                            <button className='p-2 m-2 font-bold text-2xl bg-gray-500 hover:cursor-pointer hover:bg-gray-700 rounded-full' onClick={(() => (
+                            setCreateListView(false),
+                            setUpdateListView(false),
+                            setUpdateListIngredients([]),
+                            setUpdateShoppingList({
+                                shopping_id: null,
+                                name: '',
+                                ingredients_list: [],
+                            }
+                            )))}>Return to Event Lists</button>
+                        </section>
                     </form>
                 </>
             :
