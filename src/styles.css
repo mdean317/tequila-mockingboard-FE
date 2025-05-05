@@ -1,18 +1,32 @@
 @import "tailwindcss";
-
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Tagesschrift&display=swap');
 
 html, body {
   margin: 0;
-  background-image: linear-gradient(gray, blue);
+  background-image: url('/public/Mixology\ image.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;          
   height: 100%;
+  background-color: black;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  
+  color: white
+}
+
+h1, h2 {
+  font-family: "tagesschrift-regular";
+  color: white
 }
 
 #root {
   /*max-width: 1280px;*/
   margin: 0 auto;
+  height: 100%;
   padding: 2rem;
   text-align: center;
-  background-color: aqua;
+  background-color: rgba(0,0,0, 0.4);
 }
 
 #main {
@@ -20,5 +34,20 @@ html, body {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color: rgb(32, 227, 84);
+}
+
+.btn-primary {
+  @apply bg-indigo-600 h-10 mt-1 font-semibold rounded-xl text-center hover:bg-indigo-700
+}
+
+.card-container{
+  @apply flex justify-center flex-wrap align-middle m-2.5
+}
+
+.card{
+  @apply flex flex-col w-1/5 aspect-square my-4 mx-[30px]
+}
+
+.h3-primary {
+  @apply text-indigo-600 text-center font-semibold text-2xl m-1
 }

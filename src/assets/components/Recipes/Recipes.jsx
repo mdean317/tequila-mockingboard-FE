@@ -1,14 +1,17 @@
 import React from "react";
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import '../.././../styles.css';
 
 const Recipes = () => {
 
-    // Set state variables
+    // Set state variables - All recipies to show. 
     const [allRecipes, setAllRecipes] = useState([]);
     
+    // Grab navigation object. 
     const navigate = useNavigate();
 
+    // Function to navigate to create a new recipe
     const navToCreate = () => {
 
         navigate('/recipe/new', {
@@ -16,10 +19,10 @@ const Recipes = () => {
 
     }
 
+    // Function to navigate to view/update an existing recipe
     const navToRecipe = (recipe) => {
 
-        console.log(recipe)
-        console.log(recipe.recipe_id)
+        // Send recupe object and page activity. 
         navigate('/recipe', {
             state: {
                 recipe: recipe,
@@ -28,9 +31,10 @@ const Recipes = () => {
         });
     }
 
-    const addIngredients = async (ingredients) => {
+    // TO BE IMPLEMENTED - adds recipe's ingredients to shopping list. 
+    //const addIngredients = async (ingredients) => {
 
-        console.log(ingredients)
+      //  console.log(ingredients)
         /*
         try {
             const response = await fetch(`http://18.234.134.4:8000/api/${recipeData.recipe_id}`, {
@@ -45,11 +49,12 @@ const Recipes = () => {
             console.error('Delete failed:', error);
         }
     
-        navigate('/recipes');  */
-    } 
+        navigate('/recipes');  
+    } */
 
     useEffect(() => {
-    
+        
+        // Get all recipies from FB. 
         const getAllRecipes = async () => {
     
             // Fetch all reviews from DB
@@ -68,18 +73,34 @@ const Recipes = () => {
     
         getAllRecipes();
     
+    // Only run once on initialization. 
     }, [])
 
     return (
-        <div className='main-container'>
-        <button className='addRecipeBtn' onClick={() => navToCreate()}>Add New Recipe</button>
-        <div className='recipes-container'>
+        
+        // Main container. 
+        <div className='flex justify-center align-middle m-10 flex-col'>
+
+        {/* Add Recipe Button */}
+        <button className='btn-primary w-40mt-4 mb-6 self-center p-2' onClick={() => navToCreate()}>Add New Recipe</button>
+  
+        {/* Recipes container*/}
+        <div className='card-container'>
+
+            {/* Populate recipes from DB */}   
             {allRecipes.map ((recipe) => (
-                <div className='recipe' key={recipe.recipe_id}>
-                     <h3>{recipe.name}</h3>
-                     <img src={`/${recipe.name}.jpg`}></img>
-                     <button className='recipeBtn' onClick={() => navToRecipe(recipe)}>Read More</button>
-                     <button className='addIngsBtn' onClick={() => addIngredients(recipe.ingredients)}>Add Ingredients to Shopping List</button>
+
+                // Recipe Card
+                <div key={recipe.recipe_id} className='card' >
+
+                     <h3 className='h3-primary' > {recipe.name}</h3>
+                   
+                     <img src={`/${recipe.name}.jpg`} className='aspect-square w-4/5 object-cover self-center mt-2 mb-4'></img>
+      
+                     <button className='btn-primary self-center w-30' 
+                     onClick={() => navToRecipe(recipe)}>Full Recipe</button>
+                    {/*
+                     <button className='btn-primary' onClick={() => addIngredients(recipe.ingredients)}>Add Ingredients to Shopping List</button>*/}
                 </div>
                 ))}
         </div>
