@@ -5,20 +5,20 @@ const Navbar = ({ user }) => {
   return (
     <nav className="flex justify-around p-2" id="top-navbar"> {/* */}
 
-      <Link className="navbar-link" to="/">Home</Link>
+      <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/">Home</Link>
       {user === true ? (
         <>
-          <Link className="navbar-link" to="/signin">Sign In</Link>
-          <Link className="navbar-link" to="/signup">Sign Up</Link>
+          <Link className="text-black font-bold p-2 bg-white rounded-xl" to="/signin">Sign In</Link>
+          <Link className="text-black font-bold p-2 bg-white rounded-xl" to="/signup">Sign Up</Link>
           
         </>
       ) : (
         <>
-          <Link className="navbar-link" to="/ingredients/list">Ingredients</Link>
-          <Link className="navbar-link" to="/shoppinglists">Your Shopping Lists</Link>
-          <Link className="navbar-link" to="/recipes">Recipes</Link>
-          <Link className="navbar-link" to="/logout">Log Out</Link>
-          <Link className="navbar-link" to="/user" >Profile</Link>
+          <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/ingredients/list">Ingredients</Link>
+          <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/shoppinglists">Your Shopping Lists</Link>
+          <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/recipes">Recipes</Link>
+          <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/logout">Log Out</Link>
+          <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/user" >Profile</Link>
         </>
       )}
     </nav>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const UserProfile = () => {
+const UserProfile = ({onAuthSuccess}) => {
     const [profile, setProfile] = useState({
         name: "",
         email: "",
@@ -13,71 +13,100 @@ const UserProfile = () => {
 
 
     useEffect(() => {
-            const fetchUser = async () => {
-                try {
-                    const response = await fetch('http://18.234.134.4:8000/api/user');
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    setProfile(data);
-                } catch (err) {
-                    setError(err.message);
-                }
-            };
-            fetchUser();
-        }, []);
-
-        const handleEdit = (event) => {
-            setProfile({
-                ...profile,
-                [event.target.name]: event.target.value,
-            });
-        };
-
-        const handleSave = async () => {
+        const fetchUser = async () => {
             try {
                 const response = await fetch('http://18.234.134.4:8000/api/user', {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(profile),
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
                 });
-    
                 if (!response.ok) {
-                    throw new Error(`Failed to update profile: ${response.status}`);
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-                setEdit(false);
+                const data = await response.json();
+                setProfile(data);
             } catch (err) {
                 setError(err.message);
             }
         };
+        fetchUser();
+    }, []);
 
-        return (
-            <div>
-                <h1>User Profile</h1>
-                {error ? <p>Error: {error}</p> : (
-            <div>
-                {edit == true ? (
+    const handleEdit = (event) => {
+        setProfile({
+            ...profile,
+            [event.target.name]: event.target.value,
+        });
+    };
+
+    const handleSave = async () => {
+        try {
+            const response = await fetch('http://18.234.134.4:8000/api/user', {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(profile),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update profile: ${response.status}`);
+            }
+            setEdit(false);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    return (
+        <div>
+            <h1 className="font-bold text-5xl m-8">User Profile</h1>
+            {error ? <p>Error: {error}</p> : (
+                <div>
+                    {edit == true ? (
                         <>
-                            <input type="text" name="name" placeholder="Name" value={profile.name} onChange={handleEdit} />
-                            <input type="email" name="email" placeholder="Email" value={profile.email} onChange={handleEdit} />
-                            <input type="text" name="address" placeholder="Address" value={profile.address} onChange={handleEdit} />
-                            <input type="text" name="phone_number" placeholder="Phone Number" value={profile.phone_number} onChange={handleEdit} />
-                            <button onClick={handleSave}>Save</button>
+                            <input className="bg-white m-4 rounded"
+                                type="text"
+                                name="name"
+                                placeholder="Name"
+                                value={profile.name}
+                                onChange={handleEdit} />
+                            <input className="bg-white m-4 rounded"
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                value={profile.email}
+                                onChange={handleEdit} />
+                            <input className="bg-white m-4 rounded"
+                                type="text"
+                                name="address"
+                                placeholder="Address"
+                                value={profile.address}
+                                onChange={handleEdit} />
+                            <input className="bg-white m-4 rounded"
+                                type="text"
+                                name="phone_number"
+                                placeholder="Phone Number"
+                                value={profile.phone_number}
+                                onChange={handleEdit} />
+                            <button className="hover:bg-green-700 cursor-pointer text-white bg-black border-solid border-black rounded border-2 px-1 m-4"
+                                onClick={handleSave}>Save</button>
                         </>
                     ) : (
                         <>
-                            <p><strong>Name:</strong> {profile.name}</p>
-                            <p><strong>Email:</strong> {profile.email}</p>
-                            <p><strong>Address:</strong> {profile.address}</p>
-                            <p><strong>Phone Number:</strong> {profile.phone_number}</p>
-                            <button onClick={(() => (setEdit(true)))} >Edit Profile</button>
+                        <div className="container py-8 w-5/12 h-5/6 mx-auto bg-yellow-50 items-center border-solid border-black rounded border-2">
+                            <p className="text-2xl">Name: {profile.name}</p>
+                            <p className="text-2xl">Email: {profile.email}</p>
+                            <p className="text-2xl">Address: {profile.address}</p>
+                            <p className="text-2xl">Phone Number: {profile.phone_number}</p>
+                            <button className="text-lg hover:bg-green-700 cursor-pointer text-white bg-black border-solid border-black rounded border-2 px-1 m-4"
+                            onClick={(() => (setEdit(true)))} >Edit Profile</button>
+                            </div>
                         </>
                     )}
-            </div>
-        )}
-            </div>
-        );
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default UserProfile;

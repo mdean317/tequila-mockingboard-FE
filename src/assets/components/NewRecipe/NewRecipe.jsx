@@ -62,10 +62,10 @@ const NewRecipe = ({ allIngredients }) => {
             // If successful, get recipe and put in state var,
             const newRecipe = await response.json()
             setRecipeData(newRecipe)
-            
+                
             // For each ingredient in recipe
             for (const ingredient of recipeIngredients) {
-                
+                console.log(newRecipe)
                 // Create recipe object
                 const ingDBObject = {recipe: newRecipe.recipe_id, ingredient : ingredient.ingredient, quantity: ingredient.quantity}
 

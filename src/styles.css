@@ -3,7 +3,9 @@
 
 html, body {
   margin: 0;
+
   background-color: black;
+
   height: 100%;
 }
 
@@ -37,20 +39,4 @@ html, body {
 
 .h3-primary {
   @apply text-indigo-600 text-center font-semibold text-2xl m-1
-}
-
-.navbar-link {
-  @apply text-blue-700 font-bold p-2 bg-black rounded-xl  hover:bg-stone-200 opacity-80 transition duration-300
-}
-
-.label-primary {
-  @apply text-indigo-600 text-center font-semibold text-xl m-1 
-}
-
-.select-primary {
-  @apply text-indigo-600 text-center font-semibold text-2xl m-1 
-}
-
-.textarea-primary {
-  @apply text-indigo-600 border border-gray-700 rounded-md appearance-none
 }
