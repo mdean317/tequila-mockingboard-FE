@@ -3,7 +3,7 @@
 
 html, body {
   margin: 0;
-  background-image: linear-gradient(gray, blue);
+  background-image: linear-gradient(black, black);
   height: 100%;
 }
 
@@ -12,7 +12,7 @@ html, body {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color: aqua;
+  background-color: black;
 }
 
 #main {
