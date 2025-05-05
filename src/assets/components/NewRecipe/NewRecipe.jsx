@@ -170,7 +170,7 @@ const NewRecipe = ({ allIngredients }) => {
                 </div>
                 <button className='btn-primary w-19 mb-4' onClick={addIngredient}>Add</button>
                 <br></br>
-                <label className='h3-primary' htmlFor="instructions">Instructions:</label>
+                <label className='h3-primary p-3' htmlFor="instructions">Instructions:</label><br></br>
                 <textarea id="instructions" name="instructions"
                     rows="10" cols="70" type="text"
                     className='text-indigo-600 border border-gray-700 rounded-md appearance-none'
