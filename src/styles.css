@@ -3,7 +3,7 @@
 
 html, body {
   margin: 0;
-  background-image: linear-gradient(gray, blue);
+  background-color: black;
   height: 100%;
 }
 
@@ -12,7 +12,7 @@ html, body {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color: aqua;
+  background-color: black;
 }
 
 #main {
@@ -20,5 +20,21 @@ html, body {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color: rgb(32, 227, 84);
+  background-color: black;
+}
+
+.btn-primary {
+  @apply bg-indigo-600 h-10 mt-1 font-semibold rounded-xl text-center hover:bg-indigo-700
+}
+
+.card-container{
+  @apply flex justify-center flex-wrap align-middle m-2.5
+}
+
+.card{
+  @apply flex flex-col w-1/5 aspect-square my-4 mx-[30px]
+}
+
+.h3-primary {
+  @apply text-indigo-600 text-center font-semibold text-2xl m-1
 }
