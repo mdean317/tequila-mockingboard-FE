@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import './IngredientList.css'
 
 
 const IngredientList = ({ ingredients, setIngredients }) => {
@@ -130,22 +129,22 @@ const IngredientList = ({ ingredients, setIngredients }) => {
 
     return (
         <div>
-            <h1 className="font-bold text-5xl m-8" >INGREDIENT LIST</h1>
-            <ul className="container py-8 w-5/12 h-5/6 mx-auto bg-yellow-50 items-center border-solid border-black rounded border-2">
+            <h1 className="font-bold text-indigo-600 text-5xl m-8" >INGREDIENT LIST</h1>
+            <ul className="container py-8 w-5/12 h-auto mx-auto bg-black items-center border-solid border-indigo-600 rounded-2xl border-2">
                 {ingredients.map((ingredient) => (
                     <><li key={ingredient.ingredient_id}>
-                        <h2 className="text-lg font-semibold">{ingredient.name_of_ingredient}</h2>
+                        <h2 className="text-3xl text-indigo-600 font-semibold">{ingredient.name_of_ingredient}</h2>
                     </li>
-                        <button className="hover:bg-green-700 cursor-pointer text-white bg-black border-solid border-black rounded border-2 px-1 m-4" 
+                        <button className="hover:bg-green-700 cursor-pointer text-indigo-600 bg-black border-solid border-black rounded border-2 px-1 m-4" 
                         onClick={() => setUpdateIngredientList(!updateIngredientList) (setUpdateIngredient(ingredient))} >Update {ingredient.name_of_ingredient}</button>
                         
-                        <button className="hover:bg-red-700 cursor-pointer text-white bg-black border-solid border-black rounded border-2 px-1 m-4" 
+                        <button className="hover:bg-red-700 cursor-pointer text-indigo-600 bg-black border-solid border-black rounded border-2 px-1 m-4" 
                         onClick={() => handleDelete(ingredient.ingredient_id)}>Delete {ingredient.name_of_ingredient}</button></>
                 ))}
             </ul>
             {updateIngredientList == true ?
                 <form onSubmit={handleSubmit}>
-                    <input className="bg-white m-4 border-solid border-black rounded border-1 p-0.5"
+                    <input className="bg-indigo-600 m-4 border-solid border-black rounded border-1 p-0.5"
                         type="text"
                         name="name_of_ingredient"
                         placeholder="Ingredient Name"
@@ -153,28 +152,28 @@ const IngredientList = ({ ingredients, setIngredients }) => {
                         onChange={handleChange}
                         required
                     />
-                    <input className="bg-white m-4 border-solid border-black rounded border-1 p-0.5"
+                    <input className="bg-indigo-600 m-4 border-solid border-black rounded border-1 p-0.5"
                         type="text"
                         name="type"
                         placeholder="Type"
                         value={updateIngredient.type}
                         onChange={handleChange}
                     />
-                    <input className="bg-white m-4 border-solid border-black rounded border-1 p-0.5"
+                    <input className="bg-indigo-600 m-4 border-solid border-black rounded border-1 p-0.5"
                         type="number"
                         name="quantity"
                         placeholder="Quantity"
                         value={updateIngredient.quantity}
                         onChange={handleChange}
                     />
-                    <input className="bg-white m-4 border-solid border-black rounded border-1 p-0.5"
+                    <input className="bg-indigo-600 m-4 border-solid border-black rounded border-1 p-0.5"
                         type="text"
                         name="recommended_drink"
                         placeholder="Recommended Drink"
                         value={updateIngredient.recommended_drink}
                         onChange={handleChange}
                     />
-                    <input className="bg-white m-4 border-solid border-black rounded border-1 p-0.5"
+                    <input className="bg-indigo-600 m-4 border-solid border-black rounded border-1 p-0.5"
                         type="number"
                         name="alt_ingredient"
                         placeholder="Alternative Ingredient ID"
@@ -183,7 +182,7 @@ const IngredientList = ({ ingredients, setIngredients }) => {
                     />
                     <label>
                         Bought:
-                        <input className="bg-white m-4"
+                        <input className="bg-indigo-600 m-4"
                             type="checkbox"
                             name="is_bought"
                             checked={updateIngredient.is_bought}
@@ -192,17 +191,17 @@ const IngredientList = ({ ingredients, setIngredients }) => {
                             }
                         />
                     </label>
-                    <button  className="cursor-pointer text-white bg-black border-solid border-black rounded border-2 px-1 m-4"
+                    <button  className="cursor-pointer text-white bg-indigo-600 border-solid border-black rounded-md border-2 px-1 m-4"
                     type="submit">Update Ingredient</button>
                 </form>
                 : <></>
             }
-            <button className="hover:bg-green-700 cursor-pointer text-black font-bold p-2 bg-yellow-50 rounded-xl border-2 px-1 m-4"
+            <button className="hover:bg-green-700 cursor-pointer text-black font-bold p-2 bg-indigo-600 rounded-xl border-2 px-1 m-4"
             onClick={() => setAddIngredientForm(!addIngredientForm)} >Add Ingredient</button>
 
             {addIngredientForm == true ?
                 <form onSubmit={handleAddSubmit}>
-                    <input className="bg-white m-4 border-solid border-black rounded border-1"
+                    <input className="bg-indigo-600 m-4 border-solid border-black rounded border-1"
                         type="text"
                         name="name_of_ingredient"
                         placeholder="Ingredient Name"
@@ -210,28 +209,28 @@ const IngredientList = ({ ingredients, setIngredients }) => {
                         onChange={handleChange}
                         required
                     />
-                    <input className="bg-white m-4  border-solid border-black rounded border-1 p-0.5"
+                    <input className="bg-indigo-600 m-4  border-solid border-black rounded border-1 p-0.5"
                         type="text"
                         name="type"
                         placeholder="Type"
                         value={addIngredient.type}
                         onChange={handleChange}
                     />
-                    <input className="bg-white m-4  border-solid border-black rounded border-1 p-0.5"
+                    <input className="bg-indigo-600 m-4  border-solid border-black rounded border-1 p-0.5"
                         type="number"
                         name="quantity"
                         placeholder="Quantity"
                         value={addIngredient.quantity}
                         onChange={handleChange}
                     />
-                    <input className="bg-white m-4  border-solid border-black rounded border-1 p-0.5"
+                    <input className="bg-indigo-600 m-4  border-solid border-black rounded border-1 p-0.5"
                         type="text"
                         name="recommended_drink"
                         placeholder="Recommended Drink"
                         value={addIngredient.recommended_drink}
                         onChange={handleChange}
                     />
-                    <input className="bg-white m-4  border-solid border-black rounded border-1 p-0.5"
+                    <input className="bg-indigo-600 m-4  border-solid border-black rounded border-1 p-0.5"
                         type="number"
                         name="alt_ingredient"
                         placeholder="Alternative Ingredient ID"
@@ -249,7 +248,7 @@ const IngredientList = ({ ingredients, setIngredients }) => {
                             }
                         />
                     </label>
-                    <button className="hover:bg-green-700 cursor-pointer text-white bg-black border-solid border-black rounded border-2 px-1 m-4"
+                    <button className="hover:bg-green-700 cursor-pointer text-black bg-indigo-600 border-solid border-black rounded-md border-2 px-1 m-4"
                     type="submit">Add Ingredient</button>
                 </form>
                 : <></>

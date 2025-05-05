@@ -78,7 +78,7 @@ const App = () => {
             userShoppingLists={userShoppingLists}
           />
         } />
-        <Route path='/user' element={<UserProfile />} />
+        {/* <Route path='/user' element={<UserProfile />} /> */}
         {/* <Route path="/signin" element={<SignIn onAuthSuccess={handleAuthSuccess} />} />
         <Route path="/signup" element={<SignUp onAuthSuccess={handleAuthSuccess} />} /> */}
         {/* <Route path="/logout" element={<Logout onLogout={handleLogout} />} /> */}
