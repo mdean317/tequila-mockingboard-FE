@@ -12,26 +12,26 @@ const UserProfile = ({onAuthSuccess}) => {
     const [edit, setEdit] = useState(false);
 
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const response = await fetch('http://18.234.134.4:8000/api/user', {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                setProfile(data);
-            } catch (err) {
-                setError(err.message);
-            }
-        };
-        fetchUser();
-    }, []);
+    // useEffect(() => {
+    //     const fetchUser = async () => {
+    //         try {
+    //             const response = await fetch('http://18.234.134.4:8000/api/user', {
+    //                 method: "GET",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                 }
+    //             });
+    //             if (!response.ok) {
+    //                 throw new Error(`HTTP error! Status: ${response.status}`);
+    //             }
+    //             const data = await response.json();
+    //             setProfile(data);
+    //         } catch (err) {
+    //             setError(err.message);
+    //         }
+    //     };
+    //     fetchUser();
+    // }, []);
 
     const handleEdit = (event) => {
         setProfile({
@@ -59,7 +59,7 @@ const UserProfile = ({onAuthSuccess}) => {
 
     return (
         <div>
-            <h1 className="font-bold text-5xl m-8">User Profile</h1>
+            <h1 className="font-bold text-white text-5xl m-8">User Profile</h1>
             {error ? <p>Error: {error}</p> : (
                 <div>
                     {edit == true ? (
