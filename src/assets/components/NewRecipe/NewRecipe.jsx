@@ -52,9 +52,9 @@ const NewRecipe = ({ allIngredients }) => {
 
             const newRecipe = await response.json()
             setRecipeData(newRecipe)
-        
+            
             for (const ingredient of recipeIngredients) {
-                
+                console.log(newRecipe)
                 const ingDBObject = {recipe: newRecipe.recipe_id, ingredient : ingredient.ingredient, quantity: ingredient.quantity}
     
                         const response = await fetch(`http://18.234.134.4:8000/api/recipeingredient`, {
