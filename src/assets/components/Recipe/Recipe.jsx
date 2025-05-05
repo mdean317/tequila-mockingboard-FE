@@ -252,7 +252,7 @@ const Recipe = ({ allIngredients }) => {
                         ))}
                     </div>
                     <button className='btn-primary w-19 self-center mb-4' onClick={addIngredient}>Add </button>
-                    <label className='h3-primary' htmlFor="instructions">Instructions:</label>
+                    <label className='h3-primary' htmlFor="instructions">Instructions:</label><br></br>
                     <textarea id="instructions" name="instructions"
                         rows="10" cols="70"
                         value={recipeData.instructions || ''}
@@ -276,7 +276,7 @@ const Recipe = ({ allIngredients }) => {
                         </div>
                         ))}
                     </div>
-                    <label className='h3-primary' htmlFor="instructions">Instructions:</label>
+                    <label className='h3-primary' htmlFor="instructions">Instructions:</label><br></br>
                     <textarea id="instructions" name="instructions"
                         rows="10" cols="70" 
                         value={recipeData.instructions || ''}
