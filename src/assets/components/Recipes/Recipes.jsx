@@ -32,9 +32,9 @@ const Recipes = () => {
     }
 
     // TO BE IMPLEMENTED - adds recipe's ingredients to shopping list. 
-    const addIngredients = async (ingredients) => {
+    //const addIngredients = async (ingredients) => {
 
-        console.log(ingredients)
+      //  console.log(ingredients)
         /*
         try {
             const response = await fetch(`http://18.234.134.4:8000/api/${recipeData.recipe_id}`, {
@@ -49,8 +49,8 @@ const Recipes = () => {
             console.error('Delete failed:', error);
         }
     
-        navigate('/recipes');  */
-    } 
+        navigate('/recipes');  
+    } */
 
     useEffect(() => {
         
@@ -99,8 +99,8 @@ const Recipes = () => {
       
                      <button className='btn-primary self-center w-30' 
                      onClick={() => navToRecipe(recipe)}>Full Recipe</button>
-                    
-                     <button className='btn-primary' onClick={() => addIngredients(recipe.ingredients)}>Add Ingredients to Shopping List</button>
+                    {/*
+                     <button className='btn-primary' onClick={() => addIngredients(recipe.ingredients)}>Add Ingredients to Shopping List</button>*/}
                 </div>
                 ))}
         </div>
