@@ -1,7 +1,4 @@
-import { useEffect, useState } from 'react'
-import Recipes from './assets/components/Recipes/Recipes';
-import Recipe from './assets/components/Recipe/Recipe';
-import NewRecipe from './assets/components/NewRecipe/NewRecipe';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from './assets/components/NavBar/NavBar';
 import IngredientDisplay from './assets/components/IngredientDisplay/IngredientDisplay';
@@ -11,30 +8,42 @@ import SignUp from './assets/components/auth/SignUp';
 import Home from './assets/components/Homepage/Homepage';
 import IngredientList from './assets/components/Ingredient/IngredientList';
 import UserProfile from './assets/components/User/UserProfile';
+import Recipe from './assets/components/Recipe/Recipe'
+import Recipes from './assets/components/Recipes/Recipes'
+import NewRecipe from './assets/components/NewRecipe/NewRecipe'
 
 const App = () => {
-  const [user, setUser] = useState(localStorage.getItem('authToken') ? 'loggedIn' : '');
-  console.log('App: Initial user state:', user);
+    const [user, setUser] = useState(null);
+    const [allIngredients, setAllIngredients] = useState([]);
+    const [userShoppingLists, setShoppingLists] = useState([]);
+    const navigate = useNavigate();
 
-  const [allIngredients, setAllIngredients] = useState([]);
-  const [userShoppingLists, setShoppingLists] = useState([]);
+    // On app load, restore session if available
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+    //     const storedUser = localStorage.getItem('user');
+    //     if (token && storedUser) {
+    //         setUser({ token, user: JSON.parse(storedUser) });
+    //     }
+    // }, []);
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const getAllIngredients = async () => {
-      // Fetch all reviews from DB
-      const response = await fetch(`http://18.234.134.4:8000/api/ingredient`);
-
-      // If successful...
-      if (response) {
-        // Parse JSON data into review array
-        const JSONdata = await response.json();
-        setAllIngredients(JSONdata || []);
-      }
-    };
-    getAllIngredients();
-  }, []);
+    // Fetch ingredients
+    useEffect(() => {
+        const getAllIngredients = async () => {
+            try {
+                const response = await fetch('http://18.234.134.4:8000/api/ingredient');
+                if (response.ok) {
+                    const data = await response.json();
+                    setAllIngredients(data || []);
+                } else {
+                    console.error('Failed to fetch ingredients');
+                }
+            } catch (error) {
+                console.error('Error fetching ingredients:', error);
+            }
+        };
+        getAllIngredients();
+    }, []);
 
   // const handleAuthSuccess = (userData) => {
   //   const authToken = userData?.key;
@@ -78,10 +87,9 @@ const App = () => {
             userShoppingLists={userShoppingLists}
           />
         } />
-        {/* <Route path='/user' element={<UserProfile />} /> */}
+        {/* <Route path="/logout" element={<Logout onLogout={handleLogout} />} /> */}
         {/* <Route path="/signin" element={<SignIn onAuthSuccess={handleAuthSuccess} />} />
         <Route path="/signup" element={<SignUp onAuthSuccess={handleAuthSuccess} />} /> */}
-        {/* <Route path="/logout" element={<Logout onLogout={handleLogout} />} /> */}
         <Route path="/ingredients/list" element={<IngredientList ingredients={allIngredients} setIngredients={setAllIngredients} />} />
         <Route path="/shoppinglists" element={<ShoppingList allIngredients={allIngredients} setAllIngredients={setAllIngredients} userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />
         <Route path="/shoppinglists/new" element={<ShoppingList userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />

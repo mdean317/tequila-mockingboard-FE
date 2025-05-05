@@ -27,10 +27,37 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients}) => 
     }, []);
 
     const handleChange = (event) => {
-        event.preventDefault()
-        setNewShoppingList({...newShoppingList, [event.target.name]: event.target.value})
-        setUpdateShoppingList({...updateShoppingList, [event.target.name]: event.target.value})
-    }
+        if (createListView) {
+            setNewShoppingList({ ...newShoppingList, [event.target.name]: event.target.value });
+        } else if (updateListView) {
+            setUpdateShoppingList({ ...updateShoppingList, [event.target.name]: event.target.value });
+        }
+
+    };
+
+    const handleIngredientChange = (ingredientId, quantity, isCreating) => {
+        const ingredientData = { ingredient_id: ingredientId, quantity: quantity };
+        if (isCreating) {
+            const existingIndex = newShoppingList.ingredients.findIndex(item => item.ingredient_id === ingredientId);
+            if (existingIndex > -1) {
+                const updatedIngredients = [...newShoppingList.ingredients];
+                updatedIngredients[existingIndex] = ingredientData;
+                setNewShoppingList({ ...newShoppingList, ingredients: updatedIngredients });
+            } else {
+                setNewShoppingList({ ...newShoppingList, ingredients: [...newShoppingList.ingredients, ingredientData] });
+            }
+        } else {
+            const existingIndex = updateShoppingList.ingredients.findIndex(item => item.ingredient_id === ingredientId);
+            if (existingIndex > -1) {
+                const updatedIngredients = [...updateShoppingList.ingredients];
+                updatedIngredients[existingIndex] = ingredientData;
+                setUpdateShoppingList({ ...updateShoppingList, ingredients: updatedIngredients });
+            } else {
+                setUpdateShoppingList({ ...updateShoppingList, ingredients: [...updateShoppingList.ingredients, ingredientData] });
+            }
+        }
+
+    };
 
     const handleCreateNewList = async (event) => {
         event.preventDefault()
@@ -49,7 +76,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients}) => 
         const response = await fetch(`http://18.234.134.4:8000/api/shoppinglist`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(getNewShoppingList)
         })
@@ -194,13 +221,11 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients}) => 
         await fetch(`http://18.234.134.4:8000/api/shoppinglist/${event.shopping_id}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        const res = await fetch(`http://18.234.134.4:8000/api/shoppinglist`)
-        const shopList = await res.json();
-        setShoppingLists(shopList)
-    }
+                'Content-Type': 'application/json',
+            },
+        });
+        setShoppingLists(prevLists => prevLists.filter(list => list.shopping_id !== shoppingList.shopping_id)); // Update in App
+    };
 
     return(
         <>
@@ -391,7 +416,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients}) => 
                 <></>
             }
         </>
-    )
-}
+    );
+};
 
-export default ShoppingList
+export default ShoppingList;

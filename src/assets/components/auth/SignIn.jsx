@@ -1,82 +1,63 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 
 const SignIn = ({ onAuthSuccess }) => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
-    const [loading, setLoading] = useState(false)
-    const navigate = useNavigate()
+  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [error, setError] = useState('');
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = (event) => {
-        event.preventDefault()
-        setError('')
-        setLoading(true)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
+      const response = await fetch('http://18.234.134.4:8000/api/user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-        fetch('http://18.234.134.4:8000/api/auth/login/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username: username, password: password }),
-          })
-            .then(response => response.json()) // Try to convert the response to JSON
-            .then(data => {
-              if (data.key && data.user) {
-                localStorage.setItem('authToken', data.key);
-                onAuthSuccess(data.user);
-                navigate('/ingredients');
-              } else if (data.non_field_errors) {
-                throw new Error(data.non_field_errors[0] || 'Sign-in failed.');
-              } else {
-                throw new Error('Sign-in failed due to an unexpected response.');
-              }
-            })
-            .catch(error => {
-              setError(error.message || 'Sign-in failed.');
-              setLoading(false);
-              console.error('Sign-in error:', error);
-            });
+      if (response.ok) {
+        const data = await response.json();
+        onAuthSuccess({ token: data.token, user: data.user });
+      } else {
+        const errorData = await response.json();
+        setError(errorData.detail || 'Failed to sign in.');
+      }
+    } catch (err) {
+      setError('Network error or server unreachable.');
+      console.error('Sign-in error:', err);
     }
+  };
 
-    return (
-        <div>
-          <h2>Log In</h2>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="username">Username:</label>
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="password">Password:</label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <button type="submit" disabled={loading}>
-              {loading ? 'Logging In...' : 'Log In'}
-            </button>
-            <p>
-              Don't have an account? <Link to="/signup">Sign Up</Link>
-            </p>
-          </form>
-          <p>
-              <Link to="/">Back to Homepage</Link>
-            </p>
-        </div>
-      );
-    };
-    
-    export default SignIn;
+  return (
+    <div>
+      <h2>Sign In</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
+        <br />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+        <br />
+        <button type="submit">Sign In</button>
+      </form>
+    </div>
+  );
+};
+
+export default SignIn;
