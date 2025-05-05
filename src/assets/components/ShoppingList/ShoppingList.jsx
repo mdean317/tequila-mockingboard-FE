@@ -2,16 +2,13 @@ import { useState, useEffect } from 'react'
 
 const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setAllIngredients}) => {
 
-    const [shoppingListIngredients, setShoppingListIngredients] = useState([{
-        ingredient: []
-    }])
+    const [shoppingListIngredients, setShoppingListIngredients] = useState([])
+    const [createListView, setCreateListView] = useState(false)
+    const [updateListView, setUpdateListView] = useState(false)
 
-    const [newShoppingList, setNewShoppingList] = useState({
-        name: '',
-        user: 1, // THIS WILL NEED TO BECOME THE USER STATE FOR THE USER'S ID
-        ingredients_list: [],
-        quantity: null
-    })
+    const [newListIngredients, setNewListIngredients] = useState([])
+
+    const [newShoppingList, setNewShoppingList] = useState({ ingredients_list: [] })
 
     const [updateShoppingList, setUpdateShoppingList] = useState({
         shopping_id: null,
@@ -19,18 +16,17 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
         ingredients_list: [],
     })
 
-    const [createListView, setCreateListView] = useState(false)
-    const [updateListView, setUpdateListView] = useState(false)
-    
     useEffect(() => {
         const getAllShoppingListIngredients = async () => {
             const res = await fetch(`http://18.234.134.4:8000/api/shoppinglistingredient`)
-            const JSONdataShoppingListIngredients = await res.json()
-            console.log(JSONdataShoppingListIngredients)
-            setShoppingListIngredients(JSONdataShoppingListIngredients || []);
+            const JSONdata = await res.json()
+            setShoppingListIngredients(JSONdata || []);
         }
         getAllShoppingListIngredients()
+
     }, []);
+
+// setRecipeData = setNewShoppingList
 
     const handleChange = (event) => {
         event.preventDefault()
@@ -41,13 +37,13 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
     const handleCreateNewList = async (event) => {
         event.preventDefault()
 
-        let getNewShoppingList = userShoppingLists
+        let getNewShoppingList = {...newShoppingList}
         let ingIDArray = []
-        for (const ingredient of shoppingListIngredients) {
+        for (const ingredient of newListIngredients) {
             ingIDArray.push(ingredient.ingredient)
         }
 
-        getNewShoppingList.ingredient = ingIDArray
+        getNewShoppingList.ingredients_list = ingIDArray
         getNewShoppingList.user = 1
         console.log(getNewShoppingList)
 
@@ -56,20 +52,15 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                getNewShoppingList
-                // name: newShoppingList.name,
-                // user: 1, // THIS WILL NEED TO BECOME THE USER STATE FOR THE USER'S ID
-                // ingredients_list: newShoppingList.ingredients_list
-            })
+            body: JSON.stringify(getNewShoppingList)
         })
-        const createdList = await response.json()
-        
-        setShoppingLists(prev => [...prev, createdList])
 
-        for (const ingredient of shoppingListIngredients) {
+        const createdList = await response.json()
+        setNewShoppingList(createdList)
+
+        for (const ingredient of newListIngredients) {
             console.log(createdList)
-            const newShoppingListIngredient = {shopping_id: createdList.shopping_id, ingredient: ingredient.ingredient_id, quantity: ingredient.quantity}
+            const newShoppingListIngredient = {shopping_id: createdList.shopping_id, ingredient: ingredient.ingredient, quantity: ingredient.quantity}
             console.log(newShoppingListIngredient)
                 const res = await fetch(`http://18.234.134.4:8000/api/shoppinglistingredient`, {
                     method: 'POST',
@@ -89,7 +80,6 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
 
     const addShoppingListIngredient = (event) => {
         event.preventDefault();
-        console.log(shoppingListIngredients)
         if (shoppingListIngredients.length === 0) {
             console.log('add first')
             setShoppingListIngredients([{ingredient : allIngredients[0].ingredient_id, name : allIngredients[0].name_of_ingredient, quantity : 0}])
@@ -102,7 +92,6 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
     const removeShoppingListIngredient = (event, ingIndex) => {
         event.preventDefault();
         const remove = shoppingListIngredients.filter((_, index) => index !== ingIndex)
-        console.log(remove)
         setShoppingListIngredients(remove)
     }
 
@@ -176,7 +165,7 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
                                 onChange={(event) => {
                                     let tempShoppingListIngredients = [...shoppingListIngredients];
                                     tempShoppingListIngredients[index] = { ...tempShoppingListIngredients[index], ingredient: parseInt(event.target.value, 10) };
-                                    setShoppingListIngredients(tempShoppingListIngredients);
+                                    setNewListIngredients(tempShoppingListIngredients);
                                 }}>
                                 {allIngredients.map((globalIngredient, index) => (
                                     globalIngredient.ingredient_id === ingredient.ingredient
@@ -189,14 +178,14 @@ const ShoppingList = ({userShoppingLists, setShoppingLists, allIngredients, setA
                                 onChange={(event) => {
                                     const tempIngredients = [...shoppingListIngredients];
                                     tempIngredients[index].quantity = parseInt(event.target.value, 10);
-                                    setShoppingListIngredients(tempIngredients);
+                                    setNewListIngredients(tempIngredients);
                                 }} ></input>
                                 
-                            <button className='actionBtn' onClick={(event) => removeShoppingListIngredient(event, index)}>Remove </button>
+                            <button className='p-2 m-2 font-bold bg-red-500 hover:cursor-pointer hover:bg-red-700 rounded-full' onClick={(event) => removeShoppingListIngredient(event, index)}>Remove </button>
                         </div>
                     ))}
-                <button className='actionBtn' onClick={addShoppingListIngredient}>Add Ingredient</button>
-                <button type="submit" onClick={handleCreateNewList}>Submit New List</button>
+                <button className='p-2 m-2 font-bold bg-green-500 hover:cursor-pointer hover:bg-green-700 rounded-full' onClick={addShoppingListIngredient}>Add Ingredient</button>
+                <button className='p-2 m-2 font-bold bg-blue-500 hover:cursor-pointer hover:bg-blue-700 rounded-full' type="submit" onClick={handleCreateNewList}>Submit New List</button>
             </form>
             </>
             :
