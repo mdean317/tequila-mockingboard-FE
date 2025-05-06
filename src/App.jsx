@@ -88,8 +88,8 @@ const App = () => {
           />
         } />
         {/* <Route path="/logout" element={<Logout onLogout={handleLogout} />} /> */}
-        {/* <Route path="/signin" element={<SignIn onAuthSuccess={handleAuthSuccess} />} />
-        <Route path="/signup" element={<SignUp onAuthSuccess={handleAuthSuccess} />} /> */}
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp  />} />
         <Route path="/ingredients/list" element={<IngredientList ingredients={allIngredients} setIngredients={setAllIngredients} />} />
         <Route path="/shoppinglists" element={<ShoppingList allIngredients={allIngredients} setAllIngredients={setAllIngredients} userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />
         <Route path="/shoppinglists/new" element={<ShoppingList userShoppingLists={userShoppingLists} setShoppingLists={setShoppingLists} />} />
