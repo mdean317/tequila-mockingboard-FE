@@ -79,13 +79,13 @@ const Recipes = () => {
     return (
         
         // Main container. 
-        <div className='flex justify-center align-middle m-10 flex-col'>
+        <div className='flex justify-center align-middle m-10 flex-col '>
 
         {/* Add Recipe Button */}
         <button className='btn-primary w-40mt-4 mb-6 self-center p-2' onClick={() => navToCreate()}>Add New Recipe</button>
   
         {/* Recipes container*/}
-        <div className='card-container'>
+        <div className='card-container bg-white/60 rounded-xl'>
 
             {/* Populate recipes from DB */}   
             {allRecipes.map ((recipe) => (
