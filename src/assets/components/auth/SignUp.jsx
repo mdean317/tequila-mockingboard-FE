@@ -1,70 +1,106 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const SignUp = ({ onAuthSuccess }) => {
-  const [formData, setFormData] = useState({ username: '', password: '', email: '' });
-  const [error, setError] = useState('');
+// Simplified SignUp component with success message
+const SignUp = () => {
+    const [formData, setFormData] = useState({ name: '', password: '', email: '' });
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState(''); // State for the success message
+    const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    const handleChange = (e) => {
+        // Clear success message when user starts typing again
+        if (success) setSuccess('');
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      const response = await fetch('http://18.234.134.4:8000/api/user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setSuccess(''); // Clear previous success message
 
-      if (response.ok) {
-        const data = await response.json();
-      } else {
-        const errorData = await response.json();
-        setError(errorData.detail || 'Failed to sign up.');
-      }
-    } catch (err) {
-      setError('Network error or server unreachable.');
-      console.error('Sign-up error:', err);
-    }
-  };
+        try {
+            const response = await fetch('http://18.234.134.4:8000/api/user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
 
-  return (
-    <div>
-      <h2>Sign Up</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-        <br />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <br />
-        <button type="submit">Sign Up</button>
-      </form>
-    </div>
-  );
+            if (response.ok) {
+                console.log('Sign up successful!');
+                setSuccess('Sign up successful!'); // *** Set success message ***
+                setFormData({ name: '', password: '', email: '' }); // Clear form
+
+                // Optional: Redirect after a short delay to show the message
+                setTimeout(() => {
+                    navigate('/signin');
+                }, 1500); // Redirect after 1.5 seconds
+
+            } else {
+                const errorData = await response.json();
+                setError(errorData?.detail || 'Failed to sign up.');
+                console.error('Sign-up error response:', errorData);
+            }
+        } catch (err) {
+            setError('Network error or server unreachable.');
+            console.error('Sign-up fetch error:', err);
+        }
+    };
+
+    return (
+        <div>
+            <h2>Sign Up</h2>
+            {/* Display error message */}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {/* Display success message */}
+            {success && <p style={{ color: 'green' }}>{success}</p>}
+
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Username"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    disabled={!!success} // Disable form fields after success
+                />
+                <br />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    disabled={!!success} // Disable form fields after success
+                />
+                 <br />
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    disabled={!!success} // Disable form fields after success
+                />
+                <br />
+                <button type="submit" disabled={!!success}> {/* Disable button after success */}
+                    Sign Up
+                </button>
+            </form>
+             {/* Link to Sign In Page (optional if redirecting anyway) */}
+             {!success && ( // Only show if not successful yet
+                 <p>
+                    Already have an account?{' '}
+                    <button type="button" onClick={() => navigate('/signin')} style={{ color: 'blue', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                        Sign In
+                    </button>
+                </p>
+             )}
+        </div>
+    );
 };
 
 export default SignUp;
