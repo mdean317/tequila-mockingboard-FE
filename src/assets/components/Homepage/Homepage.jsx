@@ -10,14 +10,15 @@ const Home = ({ user, handleLogout }) => {
 
       <div>
         <h1 className='text-8xl p-5 m-2 bg-teal-700/75 rounded-full'>Welcome to our very own Mixer App!</h1>
-        <p>Pick from the very best ingredients to create your favorite drinks!</p>
-        <p>Easy to navigate, no hassle — fulfill to your heart's enjoyment!</p>
-
+        <section className='bg-gray-500/70 my-5 rounded-xl py-10'>
+          <p className='font-[tagesschrift-regular] text-4xl mr-10'>Pick from the very best ingredients to create your favorite drinks!</p>
+          <p className='font-[tagesschrift-regular] text-4xl mr-10'>Easy to navigate, no hassle — fulfill to your heart's enjoyment!</p>
+        </section>
         {!user ? (
-          <>
-            <p>Ready to shop? Let's get started!</p>
-            <Link to="/signup">Sign Up</Link> | <Link to="/signin">Sign In</Link>
-          </>
+          <section className='bg-gray-500/70 my-5 rounded-xl py-10'>
+            <p className='font-[tagesschrift-regular] text-4xl mr-10 pb-10'>Ready to shop? Let's get started!</p>
+            <Link className='font-[tagesschrift-regular] text-4xl mr-10' to="/signup">Sign Up</Link> | <Link className='font-[tagesschrift-regular] text-4xl mr-10' to="/signin">Sign In</Link>
+            </section>
         ) : (
           <>
             <p>You're logged in as <strong>{user.username}</strong>!</p>
