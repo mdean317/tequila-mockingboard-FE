@@ -17,7 +17,7 @@ const Navbar = ({ user }) => {
           <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/ingredients/list">Ingredients</Link>
           <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/shoppinglists">Your Shopping Lists</Link>
           <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/recipes">Recipes</Link>
-          <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/logout">Log Out</Link>
+          {/* <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/logout">Log Out</Link> */}
           {/* <Link className="text-black font-bold p-2 bg-yellow-50 rounded-xl" to="/user" >Profile</Link> */}
         </>
       )}
