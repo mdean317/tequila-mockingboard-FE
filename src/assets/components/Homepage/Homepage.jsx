@@ -9,7 +9,7 @@ const Home = ({ user, handleLogout }) => {
       <title>Tequila-Mockingbird</title>
 
       <div>
-        <h1>Welcome to our very own Mixer App!</h1>
+        <h1 className='text-8xl p-5 m-2 bg-teal-700/75 rounded-full'>Welcome to our very own Mixer App!</h1>
         <p>Pick from the very best ingredients to create your favorite drinks!</p>
         <p>Easy to navigate, no hassle — fulfill to your heart's enjoyment!</p>
 
