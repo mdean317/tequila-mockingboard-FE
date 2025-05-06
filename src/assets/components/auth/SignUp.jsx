@@ -48,15 +48,15 @@ const SignUp = () => {
     };
 
     return (
-        <div>
-            <h2>Sign Up</h2>
+        <div className='bg-gray-500/90 my-5 rounded-xl py-10'>
+            <h2 className='font-[tagesschrift-regular] text-6xl mr-10'>Sign Up</h2>
             {/* Display error message */}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {/* Display success message */}
             {success && <p style={{ color: 'green' }}>{success}</p>}
 
-            <form onSubmit={handleSubmit}>
-                <input
+            <form className='font-[tagesschrift-regular] text-4xl mr-10' onSubmit={handleSubmit}>
+                <input className='bg-gray-700/50'
                     type="text"
                     name="name"
                     placeholder="Username"
@@ -66,7 +66,7 @@ const SignUp = () => {
                     disabled={!!success} // Disable form fields after success
                 />
                 <br />
-                <input
+                <input className='bg-gray-700/50'
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -76,7 +76,7 @@ const SignUp = () => {
                     disabled={!!success} // Disable form fields after success
                 />
                  <br />
-                <input
+                <input className='bg-gray-700/50'
                     type="email"
                     name="email"
                     placeholder="Email"
@@ -86,13 +86,13 @@ const SignUp = () => {
                     disabled={!!success} // Disable form fields after success
                 />
                 <br />
-                <button type="submit" disabled={!!success}> {/* Disable button after success */}
+                <button className='hover:cursor-pointer bg-green-600 p-5 rounded-full' type="submit" disabled={!!success}> {/* Disable button after success */}
                     Sign Up
                 </button>
             </form>
              {/* Link to Sign In Page (optional if redirecting anyway) */}
              {!success && ( // Only show if not successful yet
-                 <p>
+                 <p className='font-[tagesschrift-regular] text-2xl mr-10'>
                     Already have an account?{' '}
                     <button type="button" onClick={() => navigate('/signin')} style={{ color: 'blue', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                         Sign In
